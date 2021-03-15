@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dasom.task.kakaoPay.repository.approval.ApprovalRepository">
+
+    <select id="getApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Search"
+            resultType="com.dasom.task.kakaoPay.model.approval.Approval$ApprovalDocument">
+
+        SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
+                mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
+                avl.register_date, avl.approve_date
+        FROM approval avl
+            INNER JOIN member mem1 ON avl.request_member_id = mem1.member_id
+            INNER JOIN member as mem2 ON avl.approve_member_id = mem2.member_id
+        WHERE 1=1
+        <if test="approvalId != null">
+            AND approval_id = #{approvalId}
+        </if>
+
+    </select>
+
+    <select id="getApprovalList" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Search"
+            resultType="com.dasom.task.kakaoPay.model.approval.Approval$ApprovalDocument">
+
+        SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
+                mem2.name as approveMemberName, avl.request_status_code, avl.register_date, avl.approve_date
+        FROM approval avl
+            INNER JOIN member mem1 ON avl.request_member_id = mem1.member_id
+            INNER JOIN member as mem2 ON avl.approve_member_id = mem2.member_id
+        WHERE 1=1
+            AND request_status_code = 'WAIT'
+            AND approve_status_code = 'REQUEST'
+        <if test="title != null">
+            AND avl.title = #{title}
+        </if>
+        <if test="registerMemberId != null">
+            AND avl.register_member_id = #{registerMemberId}
+        </if>
+        <if test="approveMemberId != null">
+            AND avl.approve_member_id = #{approveMemberId}
+        </if>
+        <if test="requestStatusCode != null">
+            AND avl.request_status_code = #{requestStatusCode}
+        </if>
+        <if test="approveStatusCode != null">
+            AND avl.approve_status_code = #{approveStatusCode}
+        </if>
+
+    </select>
+
+
+    <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+        INSERT INTO approval
+            (title, content, request_member_id, approve_member_id,
+             approve_status_code, request_status_code,  register_date, register_member_id)
+        VALUES(
+            #{title}, #{content}, #{requestMemberId}, #{approveMemberId},
+            #{approveStatusCode}, #{requestStatusCode}, #{registerDate}, #{registerMemberId});
+        <selectKey keyProperty="approvalId" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+        update approval
+        set
+        <if test="title != null">
+            title = #{title}
+        </if>
+        <if test="content != null">
+            ,content = #{content}
+        </if>
+        <if test="approveStatusCode != null">
+            ,approve_status_code = #{approveStatusCode}
+        </if>
+        <if test="requestStatusCode != null">
+            ,request_status_code = #{requestStatusCode}
+        </if>
+        <if test="approveMemberId != null">
+            ,approve_member_id = #{approveMemberId}
+        </if>
+        <if test="approveDate != null">
+            ,approve_date = #{approveDate}
+        </if>
+        where approval_id = #{approvalId}
+    </update>
+
+    <delete id="deleteApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+        delete
+        from approval
+        where 1=1
+            and approval_id = #{approvalId}
+
+    </delete>
+</mapper>
+
