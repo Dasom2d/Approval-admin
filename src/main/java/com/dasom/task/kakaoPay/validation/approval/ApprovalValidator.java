@@ -1,15 +1,17 @@
-package com.dasom.task.validation;
+package com.dasom.task.kakaoPay.validation.approval;
 
 import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
+import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
+import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
 import com.mysql.cj.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-@Component
 @Slf4j
+@Component
 public class ApprovalValidator {
 
     public void validate(Approval approval, Errors errors){
@@ -46,5 +48,23 @@ public class ApprovalValidator {
 
     private boolean isValidContentLength(Approval approval) {
         return approval.getContent().length() <= 3000;
+    }
+
+
+    public boolean isValidApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
+        if(Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
+            throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
+        }
+
+        if(!Approval.isAvailableApproveGrade(approveMemberGradeId, requestMemberGradeId)){
+            throw new ApprovalBadRequestException("승인자는 요청자보다 직급이 높아야합니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
+        }
+        return true;
+    }
+
+    public void isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode) {
+        if(!Approval.isValidUpdate(approvalStatusCode, requestStatusCode)) {
+            throw new ApprovalBadRequestException("요청 상태의 문서만 수정 혹은 삭제 가능합니다.", ApprovalCode.INAPPOSITE_APPROVAL_STATUS.getCode());
+        }
     }
 }

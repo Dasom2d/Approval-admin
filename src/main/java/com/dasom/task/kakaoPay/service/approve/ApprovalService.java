@@ -1,17 +1,13 @@
 package com.dasom.task.kakaoPay.service.approve;
 
-import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
-import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
-import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
-import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
-import com.dasom.task.kakaoPay.model.member.Member;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
+import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +20,8 @@ public class ApprovalService {
         this.approvalRepository = approvalRepository;
     }
 
+    @Autowired
+    private ApprovalValidator approvalValidator;
 
     /**
      * 기안 리스트 조회
@@ -45,7 +43,7 @@ public class ApprovalService {
      */
     @Transactional
     public Integer registerApproval(Approval approval) {
-        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
 
         approvalRepository.registerApproval(approval);
         return approval.getApprovalId();
@@ -55,8 +53,8 @@ public class ApprovalService {
      * 기안 수정
      */
     public Integer updateApproval(Approval approval) {
-        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
-        isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
+        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        approvalValidator.isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
         approvalRepository.updateApproval(approval);
         return approval.getApprovalId();
     }
@@ -74,29 +72,11 @@ public class ApprovalService {
      * 기안 삭제
      */
     public Integer deleteApproval(Approval approval) {
-        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
-        isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
+        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        approvalValidator.isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
         approvalRepository.deleteApproval(approval);
         return approval.getApprovalId();
     }
 
-    private boolean isValidApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
-        if(Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
-            throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
-        }
-
-        if(!Approval.isAvailableApproveGrade(approveMemberGradeId, requestMemberGradeId)){
-            throw new ApprovalBadRequestException("승인자는 요청자보다 직급이 높아야합니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
-        }
-        return true;
-    }
-
-    private void isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode) {
-        if(!Approval.isValidUpdate(approvalStatusCode, requestStatusCode)) {
-            throw new ApprovalBadRequestException("요청 상태의 문서만 수정 혹은 삭제 가능합니다.", ApprovalCode.INAPPOSITE_APPROVAL_STATUS.getCode());
-        }
-    }
-
-//    private void isValidProcessMember()
 
 }
