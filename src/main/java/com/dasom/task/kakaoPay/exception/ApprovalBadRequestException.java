@@ -6,9 +6,10 @@ import lombok.Getter;
 public class ApprovalBadRequestException extends RuntimeException {
 
     private int code;
+    private String message;
 
     public ApprovalBadRequestException(String message, int code) {
-        super(message);
+        this.message = message;
         this.code = code;
     }
 }
