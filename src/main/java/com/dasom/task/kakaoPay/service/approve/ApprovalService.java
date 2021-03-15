@@ -3,6 +3,7 @@ package com.dasom.task.kakaoPay.service.approve;
 import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
+import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
 import com.dasom.task.kakaoPay.model.member.Member;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
@@ -57,9 +58,10 @@ public class ApprovalService {
     /**
      * 기안 수정
      */
-    public void updateApproval(Approval.AddParam addParam) {
-        isValidRequestStatus(addParam.getApprovalStatusCode());
+    public Integer updateApproval(Approval.AddParam addParam) {
+        isValidUpdate(addParam.getApprovalStatusCode(), addParam.getRequestStatusCode());
         approvalRepository.updateApproval(addParam);
+        return addParam.getApprovalId();
     }
 
 //
@@ -74,9 +76,10 @@ public class ApprovalService {
     /**
      * 기안 삭제
      */
-    public void deleteApproval(Approval.AddParam addParam) {
-        isValidRequestStatus(addParam.getApprovalStatusCode());
+    public Integer deleteApproval(Approval.AddParam addParam) {
+        isValidUpdate(addParam.getApprovalStatusCode(), addParam.getRequestStatusCode());
         approvalRepository.deleteApproval(addParam);
+        return addParam.getApprovalId();
     }
 
     public static Approval.AddParam makeApprovalAddParam(Approval approval, Member member) {
@@ -109,8 +112,8 @@ public class ApprovalService {
         return true;
     }
 
-    private void isValidRequestStatus(ApprovalStatusCode approvalStatusCode) {
-        if(!Approval.isRequestStatus(approvalStatusCode)) {
+    private void isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode) {
+        if(!Approval.isValidUpdate(approvalStatusCode, requestStatusCode)) {
             throw new ApprovalBadRequestException("요청 상태의 문서만 수정 혹은 삭제 가능합니다.", ApprovalCode.INAPPOSITE_APPROVAL_STATUS.getCode());
         }
     }

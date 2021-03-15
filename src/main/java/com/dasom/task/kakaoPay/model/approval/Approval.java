@@ -76,8 +76,8 @@ public class Approval {
         return approveMemberGradeId - requestMemberGradeId == 0;
     }
 
-    public static boolean isRequestStatus(ApprovalStatusCode approvalStatusCode){
-        return approvalStatusCode.equals(ApprovalStatusCode.REQUEST);
+    public static boolean isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode){
+        return approvalStatusCode.equals(ApprovalStatusCode.REQUEST) && requestStatusCode.equals(RequestStatusCode.WAIT);
     }
 
 
