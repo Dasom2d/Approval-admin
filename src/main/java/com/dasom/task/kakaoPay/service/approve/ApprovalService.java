@@ -43,15 +43,15 @@ public class ApprovalService {
      * 기안 상신
      */
     @Transactional
-    public void registerApproval(Approval approval) {
-        if(isValidApproveGrade(approval.getRequestMember(), approval.getApproveMember())) {
+    public Integer registerApproval(Approval approval) {
+        isValidApproveGrade(approval.getRequestMember(), approval.getApproveMember());
 
-            // 고쳐야 함
-            Member member = new Member(approval.getRegisterMemberId());
-            Approval.AddParam addParam = makeApprovalAddParam(approval, member);
-            approvalRepository.registerApproval(addParam);
-        }
+        // 고쳐야 함
+        Member member = new Member(approval.getRegisterMemberId());
+        Approval.AddParam addParam = makeApprovalAddParam(approval, member);
 
+        approvalRepository.registerApproval(addParam);
+        return addParam.getApprovalId();
     }
 
     /**
@@ -97,14 +97,14 @@ public class ApprovalService {
 
     private boolean isValidApproveGrade(Member approveMember, Member requestMember) {
         Integer approveMemberGradeId = approveMember.getGradeId();
-        Integer requestMemberGradeId = approveMember.getGradeId();
+        Integer requestMemberGradeId = requestMember.getGradeId();
+
+        if(Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
+            throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
+        }
 
         if(!Approval.isAvailableApproveGrade(approveMemberGradeId, requestMemberGradeId)){
             throw new ApprovalBadRequestException("승인자는 요청자보다 직급이 높아야합니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
-        }
-
-        if(!Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
-            throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
         }
         return true;
     }

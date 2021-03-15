@@ -5,8 +5,10 @@ import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,9 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @Transactional
 public class approvalRepositoryTest {
 
-    @Autowired
     ApprovalRepository approvalRepository;
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
 
+    @BeforeEach
+    public void beforeEach () {
+        approvalRepository = new ApprovalRepository(sqlSessionTemplate);
+    }
 
     @Test
     public void 단건조회테스트 () {

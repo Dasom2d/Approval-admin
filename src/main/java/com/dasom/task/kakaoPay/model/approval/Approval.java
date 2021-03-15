@@ -72,7 +72,7 @@ public class Approval {
         return approveMemberGradeId - requestMemberGradeId > 0;
     }
 
-    public static boolean isSameGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) { ;
+    public static boolean isSameGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
         return approveMemberGradeId - requestMemberGradeId == 0;
     }
 

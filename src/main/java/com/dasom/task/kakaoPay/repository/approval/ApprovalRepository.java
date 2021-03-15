@@ -10,8 +10,12 @@ import java.util.List;
 @Repository
 public class ApprovalRepository {
 
-    @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
+    public ApprovalRepository(SqlSessionTemplate sqlSessionTemplate) {
+        this.sqlSessionTemplate = sqlSessionTemplate;
+    }
+
 
     private static final String PREFIX = ApprovalRepository.class.getCanonicalName() + ".";
 
