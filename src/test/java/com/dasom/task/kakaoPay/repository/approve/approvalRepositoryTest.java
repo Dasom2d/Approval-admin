@@ -70,22 +70,22 @@ public class approvalRepositoryTest {
     @Test
     public void 등록테스트 () {
         // given
-        Approval.AddParam addParam = new Approval.AddParam();
-        addParam.setTitle("테스트 신청서");
-        addParam.setContent("테스트 신청합니다.");
-        addParam.setApproveMemberId(1);
-        addParam.setRequestMemberId(4);
-        addParam.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        addParam.setRequestStatusCode(RequestStatusCode.WAIT);
-        addParam.setRegisterDate(now());
-        addParam.setRegisterMemberId(4);
+        Approval.Param param = new Approval.Param();
+        param.setTitle("테스트 신청서");
+        param.setContent("테스트 신청합니다.");
+        param.setApproveMemberId(1);
+        param.setRequestMemberId(4);
+        param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        param.setRequestStatusCode(RequestStatusCode.WAIT);
+        param.setRegisterDate(now());
+        param.setRegisterMemberId(4);
 
         // when
-        approvalRepository.registerApproval(addParam);
+        approvalRepository.registerApproval(param);
 
         // then
         Approval.Search search = new Approval.Search();
-        search.setApprovalId(addParam.getApprovalId());
+        search.setApprovalId(param.getApprovalId());
         Approval.ApprovalDocument result = approvalRepository.getApproval(search);
         assertThat(result.getApprovalId()).isEqualTo(search.getApprovalId());
    }
@@ -93,33 +93,33 @@ public class approvalRepositoryTest {
    @Test
     public void 수정테스트 () {
         // given
-       Approval.AddParam addParam = new Approval.AddParam();
-       addParam.setApprovalId(1);
-       addParam.setContent("테스트 내용 수정합니다.");
+       Approval.Param param = new Approval.Param();
+       param.setApprovalId(1);
+       param.setContent("테스트 내용 수정합니다.");
 
        // when
-       approvalRepository.updateApproval(addParam);
+       approvalRepository.updateApproval(param);
 
        // then
        Approval.Search search = new Approval.Search();
        search.setApprovalId(1);
        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
-       assertThat(result.getContent()).isEqualTo(addParam.getContent());
+       assertThat(result.getContent()).isEqualTo(param.getContent());
 
    }
 
    @Test
     public void deleteApproval() {
         // given
-       Approval.AddParam addParam = new Approval.AddParam();
-       addParam.setApprovalId(1);
+       Approval.Param param = new Approval.Param();
+       param.setApprovalId(1);
 
        // when
-       approvalRepository.deleteApproval(addParam);
+       approvalRepository.deleteApproval(param);
 
        // then
        Approval.Search search = new Approval.Search();
-       search.setApprovalId(addParam.getApprovalId());
+       search.setApprovalId(param.getApprovalId());
        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
        assertNull(result);
    }

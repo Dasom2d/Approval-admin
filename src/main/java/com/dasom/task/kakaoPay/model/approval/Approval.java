@@ -37,7 +37,7 @@ public class Approval {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class AddParam {
+    public static class Param {
         private Integer approvalId;
         private String title;
         private String content;

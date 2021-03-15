@@ -28,16 +28,16 @@ public class ApprovalRepository {
         return sqlSessionTemplate.selectList(PREFIX + "getApprovalList", search);
     }
 
-    public Integer registerApproval(Approval.AddParam addParam) {
-        return sqlSessionTemplate.insert(PREFIX + "insertApproval", addParam);
+    public Integer registerApproval(Approval.Param param) {
+        return sqlSessionTemplate.insert(PREFIX + "insertApproval", param);
     }
 
-    public Integer updateApproval(Approval.AddParam addParam) {
-        return sqlSessionTemplate.insert(PREFIX + "updateApproval", addParam);
+    public Integer updateApproval(Approval.Param param) {
+        return sqlSessionTemplate.insert(PREFIX + "updateApproval", param);
     }
 
-    public Integer deleteApproval(Approval.AddParam addParam) {
-        return sqlSessionTemplate.delete(PREFIX + "deleteApproval", addParam);
+    public Integer deleteApproval(Approval.Param param) {
+        return sqlSessionTemplate.delete(PREFIX + "deleteApproval", param);
     }
 
 }

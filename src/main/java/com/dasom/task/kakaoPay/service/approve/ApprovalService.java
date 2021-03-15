@@ -49,19 +49,19 @@ public class ApprovalService {
 
         // 고쳐야 함
         Member member = new Member(approval.getRegisterMemberId());
-        Approval.AddParam addParam = makeApprovalAddParam(approval, member);
+        Approval.Param param = makeApprovalParam(approval, member);
 
-        approvalRepository.registerApproval(addParam);
-        return addParam.getApprovalId();
+        approvalRepository.registerApproval(param);
+        return param.getApprovalId();
     }
 
     /**
      * 기안 수정
      */
-    public Integer updateApproval(Approval.AddParam addParam) {
-        isValidUpdate(addParam.getApprovalStatusCode(), addParam.getRequestStatusCode());
-        approvalRepository.updateApproval(addParam);
-        return addParam.getApprovalId();
+    public Integer updateApproval(Approval.Param param) {
+        isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalRepository.updateApproval(param);
+        return param.getApprovalId();
     }
 
 //
@@ -76,14 +76,14 @@ public class ApprovalService {
     /**
      * 기안 삭제
      */
-    public Integer deleteApproval(Approval.AddParam addParam) {
-        isValidUpdate(addParam.getApprovalStatusCode(), addParam.getRequestStatusCode());
-        approvalRepository.deleteApproval(addParam);
-        return addParam.getApprovalId();
+    public Integer deleteApproval(Approval.Param param) {
+        isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalRepository.deleteApproval(param);
+        return param.getApprovalId();
     }
 
-    public static Approval.AddParam makeApprovalAddParam(Approval approval, Member member) {
-            return Approval.AddParam.builder()
+    public static Approval.Param makeApprovalParam(Approval approval, Member member) {
+            return Approval.Param.builder()
                     .approvalId(approval.getApprovalId())
                     .title(approval.getTitle())
                     .content(approval.getContent())

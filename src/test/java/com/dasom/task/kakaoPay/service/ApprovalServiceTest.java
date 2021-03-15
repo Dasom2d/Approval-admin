@@ -1,5 +1,6 @@
 package com.dasom.task.kakaoPay.service;
 
+import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.DateUtil.now;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 @SpringBootTest
@@ -46,7 +48,7 @@ public class ApprovalServiceTest {
         approval.setRequestStatusCode(RequestStatusCode.WAIT);
         approval.setRegisterDate(now());
         approval.setRegisterMemberId(4);
-        return  approval;
+        return approval;
     }
 
     @Test
@@ -99,42 +101,86 @@ public class ApprovalServiceTest {
     }
 
     @Test
-    public void 기안수정 () {
+    public void 직급상태예외_직급낮음 () {
         // given
-        Approval.AddParam addParam = new Approval.AddParam();
-        addParam.setApprovalId(1);
-        addParam.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        addParam.setRequestStatusCode(RequestStatusCode.WAIT);
-        addParam.setContent("테스트 내용 수정합니다.");
+        Member approveMember = new Member(1, 4);
+        Member requestMember = new Member(4, 1);
+        Approval approval = setupFApproval(approveMember, requestMember);
 
         // when
-        Integer approvalId = approvalService.updateApproval(addParam);
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(approval));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("승인자는 요청자보다 직급이 높아야합니다.");
+    }
+
+    @Test
+    public void 직급상태예외_직급같음 () {
+        // given
+        Member approveMember = new Member(4, 1);
+        Member requestMember = new Member(4, 1);
+        Approval approval = setupFApproval(approveMember, requestMember);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(approval));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("승인자는 요청자와 같은 직급일 수 없습니다.");
+    }
+
+    @Test
+    public void 기안수정 () {
+        // given
+        Approval.Param param = new Approval.Param();
+        param.setApprovalId(1);
+        param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        param.setRequestStatusCode(RequestStatusCode.WAIT);
+        param.setContent("테스트 내용 수정합니다.");
+
+        // when
+        Integer approvalId = approvalService.updateApproval(param);
 
         // then
         Approval.Search search = new Approval.Search();
         search.setApprovalId(approvalId);
         Approval.ApprovalDocument result = approvalService.getApproval(search);
 
-        assertThat(result.getContent()).isEqualTo(addParam.getContent());
-
+        assertThat(result.getContent()).isEqualTo(param.getContent());
     }
 
     @Test
     public void 기안삭제 () {
         // given
-        Approval.AddParam addParam = new Approval.AddParam();
-        addParam.setApprovalId(1);
-        addParam.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        addParam.setRequestStatusCode(RequestStatusCode.WAIT);
+        Approval.Param Param = new Approval.Param();
+        Param.setApprovalId(1);
+        Param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        Param.setRequestStatusCode(RequestStatusCode.WAIT);
 
         // when
-        approvalService.deleteApproval(addParam);
+        approvalService.deleteApproval(Param);
 
         // then
         Approval.Search search = new Approval.Search();
         search.setApprovalId(1);
         Approval.ApprovalDocument result = approvalService.getApproval(search);
         assertNull(result);
+    }
 
+    @Test
+    public void 요청상태예외_수정 () {
+        // given
+        Approval.Param param = new Approval.Param();
+        param.setApprovalId(1);
+        param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
+        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.updateApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("요청 상태의 문서만 수정 혹은 삭제 가능합니다.");
     }
 }
