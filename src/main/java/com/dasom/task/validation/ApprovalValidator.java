@@ -12,39 +12,39 @@ import org.springframework.validation.Errors;
 @Slf4j
 public class ApprovalValidator {
 
-    public void validate(Approval.AddParam param, Errors errors){
-        if(StringUtils.isNullOrEmpty(param.getTitle())) {
+    public void validate(Approval approval, Errors errors){
+        if(StringUtils.isNullOrEmpty(approval.getTitle())) {
             log.error("title is empty");
             new ApprovalBadRequestException("제목을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
-        if(StringUtils.isNullOrEmpty(param.getContent())) {
+        if(StringUtils.isNullOrEmpty(approval.getContent())) {
             log.error("content is empty");
             new ApprovalBadRequestException("내을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
-        if(param.getRequestMemberId() == null) {
+        if(approval.getRequestMemberId() == null) {
             log.error("request member id is empty");
             new ApprovalBadRequestException("요청자가 존재하지 않습니다.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
-        if(param.getApproveMemberId() == null) {
+        if(approval.getApproveMemberId() == null) {
             log.error("approve member id is empty");
             new ApprovalBadRequestException("승인자를 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
-        if(isValidTitleLength(param)) {
+        if(isValidTitleLength(approval)) {
             log.error("title length is too long.");
             new ApprovalBadRequestException("제목의 길이는 45자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
         }
-        if(isValidContentLength(param)) {
+        if(isValidContentLength(approval)) {
             log.error("title length is too long.");
             new ApprovalBadRequestException("제목의 길이는 3000자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
         }
 
     }
 
-    private boolean isValidTitleLength(Approval.AddParam param) {
-        return param.getTitle().length() <= 45;
+    private boolean isValidTitleLength(Approval approval) {
+        return approval.getTitle().length() <= 45;
     }
 
-    private boolean isValidContentLength(Approval.AddParam param) {
-        return param.getContent().length() <= 3000;
+    private boolean isValidContentLength(Approval approval) {
+        return approval.getContent().length() <= 3000;
     }
 }

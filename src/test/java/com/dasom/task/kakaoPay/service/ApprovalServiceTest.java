@@ -38,7 +38,7 @@ public class ApprovalServiceTest {
         approvalService = new ApprovalService(approvalRepository);
     }
 
-    public Approval setupFApproval(Member approveMember,  Member requestMember) {
+    public Approval setupApproval(Member approveMember,  Member requestMember) {
         Approval approval = new Approval();
         approval.setTitle("테스트 신청서");
         approval.setContent("테스트 신청합니다.");
@@ -48,6 +48,8 @@ public class ApprovalServiceTest {
         approval.setRequestStatusCode(RequestStatusCode.WAIT);
         approval.setRegisterDate(now());
         approval.setRegisterMemberId(4);
+        approval.setApproveMemberInfo(approveMember);
+        approval.setRequestMemberInfo(requestMember);
         return approval;
     }
 
@@ -87,7 +89,7 @@ public class ApprovalServiceTest {
         // given
         Member approveMember = new Member(1, 1);
         Member requestMember = new Member(4, 4);
-        Approval approval = setupFApproval(approveMember, requestMember);
+        Approval approval = setupApproval(approveMember, requestMember);
 
         // when
         int approvalId = approvalService.registerApproval(approval);
@@ -101,11 +103,50 @@ public class ApprovalServiceTest {
     }
 
     @Test
+    public void 기안수정 () {
+        // given
+        Member approveMember = new Member(1, 1);
+        Member requestMember = new Member(4, 4);
+        Approval approval = setupApproval(approveMember, requestMember);
+        approval.setApprovalId(1);
+        approval.setContent("테스트 내용 수정합니다.");
+
+        // when
+        Integer approvalId = approvalService.updateApproval(approval);
+
+        // then
+        Approval.Search search = new Approval.Search();
+        search.setApprovalId(approvalId);
+        Approval.ApprovalDocument result = approvalService.getApproval(search);
+
+        assertThat(result.getContent()).isEqualTo(approval.getContent());
+    }
+
+    @Test
+    public void 기안삭제 () {
+        // given
+        // given
+        Member approveMember = new Member(1, 1);
+        Member requestMember = new Member(4, 4);
+        Approval approval = setupApproval(approveMember, requestMember);
+        approval.setApprovalId(1);
+
+        // when
+        approvalService.deleteApproval(approval);
+
+        // then
+        Approval.Search search = new Approval.Search();
+        search.setApprovalId(1);
+        Approval.ApprovalDocument result = approvalService.getApproval(search);
+        assertNull(result);
+    }
+
+    @Test
     public void 직급상태예외_직급낮음 () {
         // given
-        Member approveMember = new Member(1, 4);
-        Member requestMember = new Member(4, 1);
-        Approval approval = setupFApproval(approveMember, requestMember);
+        Member approveMember = new Member(4, 4);
+        Member requestMember = new Member(1, 1);
+        Approval approval = setupApproval(approveMember, requestMember);
 
         // when
         ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
@@ -120,7 +161,7 @@ public class ApprovalServiceTest {
         // given
         Member approveMember = new Member(4, 1);
         Member requestMember = new Member(4, 1);
-        Approval approval = setupFApproval(approveMember, requestMember);
+        Approval approval = setupApproval(approveMember, requestMember);
 
         // when
         ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
@@ -131,54 +172,20 @@ public class ApprovalServiceTest {
     }
 
     @Test
-    public void 기안수정 () {
-        // given
-        Approval.Param param = new Approval.Param();
-        param.setApprovalId(1);
-        param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        param.setRequestStatusCode(RequestStatusCode.WAIT);
-        param.setContent("테스트 내용 수정합니다.");
-
-        // when
-        Integer approvalId = approvalService.updateApproval(param);
-
-        // then
-        Approval.Search search = new Approval.Search();
-        search.setApprovalId(approvalId);
-        Approval.ApprovalDocument result = approvalService.getApproval(search);
-
-        assertThat(result.getContent()).isEqualTo(param.getContent());
-    }
-
-    @Test
-    public void 기안삭제 () {
-        // given
-        Approval.Param Param = new Approval.Param();
-        Param.setApprovalId(1);
-        Param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        Param.setRequestStatusCode(RequestStatusCode.WAIT);
-
-        // when
-        approvalService.deleteApproval(Param);
-
-        // then
-        Approval.Search search = new Approval.Search();
-        search.setApprovalId(1);
-        Approval.ApprovalDocument result = approvalService.getApproval(search);
-        assertNull(result);
-    }
-
-    @Test
     public void 요청상태예외_수정 () {
         // given
-        Approval.Param param = new Approval.Param();
-        param.setApprovalId(1);
-        param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
-        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+        // given
+        Member approveMember = new Member(1, 1);
+        Member requestMember = new Member(4, 4);
+        Approval approval = setupApproval(approveMember, requestMember);
+        approval.setApprovalId(1);
+        approval.setContent("테스트 내용 수정합니다.");
+        approval.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
+        approval.setRequestStatusCode(RequestStatusCode.COMPLETE);
 
         // when
         ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
-                () -> approvalService.updateApproval(param));
+                () -> approvalService.updateApproval(approval));
 
         // then
         assertThat(e.getMessage()).isEqualTo("요청 상태의 문서만 수정 혹은 삭제 가능합니다.");

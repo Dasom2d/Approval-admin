@@ -45,23 +45,20 @@ public class ApprovalService {
      */
     @Transactional
     public Integer registerApproval(Approval approval) {
-        isValidApproveGrade(approval.getRequestMember(), approval.getApproveMember());
+        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
 
-        // 고쳐야 함
-        Member member = new Member(approval.getRegisterMemberId());
-        Approval.Param param = makeApprovalParam(approval, member);
-
-        approvalRepository.registerApproval(param);
-        return param.getApprovalId();
+        approvalRepository.registerApproval(approval);
+        return approval.getApprovalId();
     }
 
     /**
      * 기안 수정
      */
-    public Integer updateApproval(Approval.Param param) {
-        isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
-        approvalRepository.updateApproval(param);
-        return param.getApprovalId();
+    public Integer updateApproval(Approval approval) {
+        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
+        approvalRepository.updateApproval(approval);
+        return approval.getApprovalId();
     }
 
 //
@@ -76,32 +73,14 @@ public class ApprovalService {
     /**
      * 기안 삭제
      */
-    public Integer deleteApproval(Approval.Param param) {
-        isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
-        approvalRepository.deleteApproval(param);
-        return param.getApprovalId();
+    public Integer deleteApproval(Approval approval) {
+        isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
+        approvalRepository.deleteApproval(approval);
+        return approval.getApprovalId();
     }
 
-    public static Approval.Param makeApprovalParam(Approval approval, Member member) {
-            return Approval.Param.builder()
-                    .approvalId(approval.getApprovalId())
-                    .title(approval.getTitle())
-                    .content(approval.getContent())
-                    .approveMemberGradeId(approval.getApproveMember().getGradeId())
-                    .approveMemberId(approval.getApproveMember().getMemberId())
-                    .requestMemberGradeId(approval.getRequestMember().getGradeId())
-                    .requestMemberId(approval.getRequestMember().getMemberId())
-                    .approvalStatusCode(approval.getApprovalStatusCode())
-                    .requestStatusCode(approval.getRequestStatusCode())
-                    .registerDate(new Date())
-                    .registerMemberId(member.getMemberId())
-                    .build();
-    }
-
-    private boolean isValidApproveGrade(Member approveMember, Member requestMember) {
-        Integer approveMemberGradeId = approveMember.getGradeId();
-        Integer requestMemberGradeId = requestMember.getGradeId();
-
+    private boolean isValidApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
         if(Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
             throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
         }

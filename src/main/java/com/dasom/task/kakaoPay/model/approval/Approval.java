@@ -8,6 +8,8 @@ import lombok.*;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Approval {
 
     private Integer approvalId;
@@ -15,12 +17,27 @@ public class Approval {
     private String content;
     private Member requestMember;
     private Member approveMember;
+    private Integer approveMemberGradeId;
+    private Integer requestMemberGradeId;
+    private Integer approveMemberId;
+    private Integer requestMemberId;
     private ApprovalStatusCode approvalStatusCode;
     private RequestStatusCode requestStatusCode;
     private Date approveDate;
     private Date registerDate;
     private Date modifyDate;
     private Integer registerMemberId;
+
+    public void setRequestMemberInfo(Member requestMember) {
+        this.requestMemberGradeId = requestMember.getGradeId();
+        this.requestMemberId = requestMember.getMemberId();
+    }
+
+    public void setApproveMemberInfo(Member approveMember) {
+        this.approveMemberGradeId = approveMember.getGradeId();
+        this.approveMemberId = approveMember.getMemberId();
+    }
+
 
     @Data
     public static class Search {
@@ -30,27 +47,6 @@ public class Approval {
         private Integer approveMemberId;
         private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class Param {
-        private Integer approvalId;
-        private String title;
-        private String content;
-        private Integer approveMemberGradeId;
-        private Integer requestMemberGradeId;
-        private Integer approveMemberId;
-        private Integer requestMemberId;
-        private ApprovalStatusCode approvalStatusCode;
-        private RequestStatusCode requestStatusCode;
-        private Date approveDate;
-        private Date registerDate;
-        private Integer registerMemberId;
-
     }
 
 
@@ -69,7 +65,7 @@ public class Approval {
     }
 
     public static boolean isAvailableApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
-        return approveMemberGradeId - requestMemberGradeId > 0;
+        return approveMemberGradeId - requestMemberGradeId < 0;
     }
 
     public static boolean isSameGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {

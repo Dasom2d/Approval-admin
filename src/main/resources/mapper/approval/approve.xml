@@ -47,7 +47,7 @@
     </select>
 
 
-    <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+    <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
         INSERT INTO approval
             (title, content, request_member_id, approve_member_id,
              approve_status_code, request_status_code,  register_date, register_member_id)
@@ -59,12 +59,12 @@
         </selectKey>
     </insert>
 
-    <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+    <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
         update approval
         set
             modify_date = now()
         <if test="title != null">
-            title = #{title}
+            ,title = #{title}
         </if>
         <if test="content != null">
             ,content = #{content}
@@ -84,7 +84,7 @@
         where approval_id = #{approvalId}
     </update>
 
-    <delete id="deleteApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$AddParam">
+    <delete id="deleteApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
         delete
         from approval
         where 1=1
