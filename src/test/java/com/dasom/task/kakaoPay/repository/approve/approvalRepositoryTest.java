@@ -27,12 +27,11 @@ public class approvalRepositoryTest {
     @Autowired
     ApprovalRepository approvalRepository;
 
-    Approval.AddParam addParam = new Approval.AddParam();
-    Approval.Search search = new Approval.Search();
 
     @Test
     public void 단건조회테스트 () {
         // given
+        Approval.Search search = new Approval.Search();
         search.setApprovalId(1);
 
         // when
@@ -45,11 +44,12 @@ public class approvalRepositoryTest {
     @Test
     public void 등록테스트 () {
         // given
+        Approval.AddParam addParam = new Approval.AddParam();
         addParam.setTitle("테스트 신청서");
         addParam.setContent("테스트 신청합니다.");
         addParam.setApproveMemberId(1);
         addParam.setRequestMemberId(4);
-        addParam.setApproveStatusCode(ApprovalStatusCode.REQUEST);
+        addParam.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
         addParam.setRequestStatusCode(RequestStatusCode.WAIT);
         addParam.setRegisterDate(now());
         addParam.setRegisterMemberId(4);
@@ -58,6 +58,7 @@ public class approvalRepositoryTest {
         approvalRepository.registerApproval(addParam);
 
         // then
+        Approval.Search search = new Approval.Search();
         search.setApprovalId(addParam.getApprovalId());
         Approval.ApprovalDocument result = approvalRepository.getApproval(search);
         assertThat(result.getApprovalId()).isEqualTo(search.getApprovalId());
@@ -66,7 +67,13 @@ public class approvalRepositoryTest {
    @Test
    public void 목록조회테스트 () {
         // given
+       Approval.Search search = new Approval.Search();
        search.setApprovalId(1);
+       search.setTitle("휴가신청서");
+       search.setApproveMemberId(2);
+       search.setRequestMemberId(4);
+       search.setRequestStatusCode(RequestStatusCode.WAIT);
+       search.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
 
        // when
        List<Approval.ApprovalDocument> result = approvalRepository.getApprovalList(search);
@@ -79,9 +86,11 @@ public class approvalRepositoryTest {
    @Test
     public void 수정테스트 () {
         // given
+       Approval.AddParam addParam = new Approval.AddParam();
        addParam.setApprovalId(1);
-       addParam.setApproveStatusCode(ApprovalStatusCode.APPROVE);
+       addParam.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
        addParam.setRequestStatusCode(RequestStatusCode.COMPLETE);
+       Approval.Search search = new Approval.Search();
        search.setApprovalId(1);
 
        // when
@@ -89,19 +98,21 @@ public class approvalRepositoryTest {
 
        // then
        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
-       assertThat(result.getApprovalId()).isEqualTo(addParam.getApprovalId());
+       assertThat(result.getApproveStatusCode()).isEqualTo(addParam.getApprovalStatusCode());
 
    }
 
    @Test
     public void deleteApproval() {
         // given
+       Approval.AddParam addParam = new Approval.AddParam();
        addParam.setApprovalId(1);
 
        // when
        approvalRepository.deleteApproval(addParam);
 
        // then
+       Approval.Search search = new Approval.Search();
        search.setApprovalId(addParam.getApprovalId());
        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
        assertNull(result);

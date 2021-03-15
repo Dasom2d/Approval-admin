@@ -1,5 +1,6 @@
 package com.dasom.task.kakaoPay.model.member;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -9,4 +10,18 @@ public class Member {
     private String name;
     private Integer gradeId;
 
+    public Member(Integer memberId) {
+        this.memberId = memberId;
+    }
+
+    public Member(Integer memberId, Integer gradeId) {
+        this.memberId = memberId;
+        this.gradeId = gradeId;
+    }
+
+    public Member(Integer memberId, String name, Integer gradeId) {
+        this.memberId = memberId;
+        this.name = name;
+        this.gradeId = gradeId;
+    }
 }

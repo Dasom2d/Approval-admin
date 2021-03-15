@@ -3,7 +3,7 @@ package com.dasom.task.kakaoPay.model.approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.model.member.Member;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ public class Approval {
     private String content;
     private Member requestMember;
     private Member approveMember;
-    private ApprovalStatusCode approveStatusCode;
+    private ApprovalStatusCode approvalStatusCode;
     private RequestStatusCode requestStatusCode;
     private Date approveDate;
     private Date registerDate;
@@ -26,13 +26,17 @@ public class Approval {
     public static class Search {
         private Integer approvalId;
         private String title;
-        private Integer registerMemberId;
+        private Integer requestMemberId;
         private Integer approveMemberId;
-        private ApprovalStatusCode approveStatusCode;
+        private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
     }
 
+
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class AddParam {
         private Integer approvalId;
         private String title;
@@ -41,12 +45,14 @@ public class Approval {
         private Integer requestMemberGradeId;
         private Integer approveMemberId;
         private Integer requestMemberId;
-        private ApprovalStatusCode approveStatusCode;
+        private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
         private Date approveDate;
         private Date registerDate;
         private Integer registerMemberId;
+
     }
+
 
     @Data
     public static class ApprovalDocument {

@@ -4,11 +4,13 @@ import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
+import com.dasom.task.kakaoPay.model.member.Member;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -16,6 +18,10 @@ import java.util.List;
 public class ApprovalService {
 
     private ApprovalRepository approvalRepository;
+
+    public ApprovalService(ApprovalRepository approvalRepository) {
+        this.approvalRepository = approvalRepository;
+    }
 
 
     /**
@@ -37,16 +43,22 @@ public class ApprovalService {
      * 기안 상신
      */
     @Transactional
-    public void registerApproval(Approval.AddParam addParam) {
-        isValidApproveGrade(addParam.getApproveMemberGradeId(), addParam.getRequestMemberGradeId());
-        approvalRepository.registerApproval(addParam);
+    public void registerApproval(Approval approval) {
+        if(isValidApproveGrade(approval.getRequestMember(), approval.getApproveMember())) {
+
+            // 고쳐야 함
+            Member member = new Member(approval.getRegisterMemberId());
+            Approval.AddParam addParam = makeApprovalAddParam(approval, member);
+            approvalRepository.registerApproval(addParam);
+        }
+
     }
 
     /**
      * 기안 수정
      */
     public void updateApproval(Approval.AddParam addParam) {
-        isValidRequestStatus(addParam.getApproveStatusCode());
+        isValidRequestStatus(addParam.getApprovalStatusCode());
         approvalRepository.updateApproval(addParam);
     }
 
@@ -63,12 +75,30 @@ public class ApprovalService {
      * 기안 삭제
      */
     public void deleteApproval(Approval.AddParam addParam) {
-        isValidRequestStatus(addParam.getApproveStatusCode());
+        isValidRequestStatus(addParam.getApprovalStatusCode());
         approvalRepository.deleteApproval(addParam);
     }
 
+    public static Approval.AddParam makeApprovalAddParam(Approval approval, Member member) {
+            return Approval.AddParam.builder()
+                    .approvalId(approval.getApprovalId())
+                    .title(approval.getTitle())
+                    .content(approval.getContent())
+                    .approveMemberGradeId(approval.getApproveMember().getGradeId())
+                    .approveMemberId(approval.getApproveMember().getMemberId())
+                    .requestMemberGradeId(approval.getRequestMember().getGradeId())
+                    .requestMemberId(approval.getRequestMember().getMemberId())
+                    .approvalStatusCode(approval.getApprovalStatusCode())
+                    .requestStatusCode(approval.getRequestStatusCode())
+                    .registerDate(new Date())
+                    .registerMemberId(member.getMemberId())
+                    .build();
+    }
 
-    private void isValidApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
+    private boolean isValidApproveGrade(Member approveMember, Member requestMember) {
+        Integer approveMemberGradeId = approveMember.getGradeId();
+        Integer requestMemberGradeId = approveMember.getGradeId();
+
         if(!Approval.isAvailableApproveGrade(approveMemberGradeId, requestMemberGradeId)){
             throw new ApprovalBadRequestException("승인자는 요청자보다 직급이 높아야합니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
         }
@@ -76,6 +106,7 @@ public class ApprovalService {
         if(!Approval.isSameGrade(approveMemberGradeId, requestMemberGradeId)){
             throw new ApprovalBadRequestException("승인자는 요청자와 같은 직급일 수 없습니다.", ApprovalCode.INAPPOSITE_APPROVE_MEMBER.getCode());
         }
+        return true;
     }
 
     private void isValidRequestStatus(ApprovalStatusCode approvalStatusCode) {
