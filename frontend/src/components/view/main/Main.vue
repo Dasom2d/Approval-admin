@@ -1,6 +1,7 @@
 <template>
   <div id='container'>
     <div>{{name}} 님의 문서</div>
+      <button @click="$router.push({path: '/'})">로그아웃</button>
       <SuvNav></SuvNav>
       <!-- <Contents></Contents> -->
       <List></List>
