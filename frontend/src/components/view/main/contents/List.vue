@@ -15,12 +15,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
+                        <tr v-for="(approval, idx) in approvalList" :key="idx">
+                            <td>{{approval.approvalId}}</td>
                                 <td>
-                                    <router-link to="/view"> te</router-link>
+                                    <router-link to="/view"> {{approval.title}}</router-link>
                                 </td>
-                            <td>죠르디</td>
+                            <td>{{approval.requestMemberName}}</td>
                             <td>2021.03.12</td>
                             <td>2021.03.15</td>
                         </tr>
@@ -33,20 +33,38 @@
 			
 			
 
-
-
-
-
-
-
 <script>
+import EventBus from '@/js/eventBus'
+import axios from 'axios'
 
 export default {
   name: 'List',
-  components: {
+  created: function() {
+      let that = this;
+      EventBus.$on('deliverSearchParam', function(params){
+          that.searchParam = params;
+          that.getApprovalList();
+      })
   },
-  data() {
+    methods: {
+        getApprovalList() {
+            
+        axios.get('/api/approval/getApprovalList', {params: this.searchParam})
+            .then(res => {
+                if(res.data.code === 0) {
+                    res.data.body.forEach(approval => {
+                        approval.requestStatusCode === 'COMPLETE' ? 
+                        approval.isCompleted = '완료문서' : approval.isCompleted  = '대기문서';
+                    })
+                this.approvalList = res.data.body;
+                }
+            });
+        }
+    },
+  data () {
     return {
+        searchParam: {},
+        approvalList: []
     }
   }
 }

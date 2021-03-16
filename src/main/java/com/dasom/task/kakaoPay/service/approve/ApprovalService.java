@@ -27,6 +27,7 @@ public class ApprovalService {
      * 기안 리스트 조회
      */
     public List<Approval.ApprovalDocument> getApprovalList(Approval.Search search) {
+
         return approvalRepository.getApprovalList(search);
     }
 

@@ -62,13 +62,14 @@ public class Approval {
         private ApprovalStatusCode approveStatusCode;
         private Date approveDate;
         private Date registerDate;
+        private Boolean isCompleted;
     }
 
-    public static boolean isAvailableApproveGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
+    public static boolean isAvailableApproveGrade (Integer approveMemberGradeId, Integer requestMemberGradeId) {
         return approveMemberGradeId - requestMemberGradeId < 0;
     }
 
-    public static boolean isSameGrade(Integer approveMemberGradeId, Integer requestMemberGradeId) {
+    public static boolean isSameGrade (Integer approveMemberGradeId, Integer requestMemberGradeId) {
         return approveMemberGradeId - requestMemberGradeId == 0;
     }
 

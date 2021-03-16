@@ -12,7 +12,6 @@
 import SubNav from '@/components/view/main/nav/SubNav'
 import Contents from '@/components/view/main/contents/Contents'
 
-
 export default {
   name: 'Main',
   components: {

@@ -10,7 +10,7 @@
                         <ul class="lst_type">
                             <li v-for="(approval, idx) in approvalList" :key="idx">
                                 <em>완료문서</em>
-                                <p>{{approval.title}}</p>
+                                <p><router-link to="/detail">{{approval.title}}</router-link></p>
                                 <span>
                                     <a>{{approval.requestMemberName}}</a>
                                     <span>2021.03.16</span>
@@ -31,7 +31,7 @@ import axios from 'axios'
 
 export default {
     name: 'Default',
-    mounted() {
+    mounted: function() {
         let params = {
             registerMemberId: this.$store.state.memberInfo.memberId
         }
@@ -39,13 +39,12 @@ export default {
             .then(res => {
                 if(res.data.code === 0) {
                     res.data.body.forEach(approval => {
-                        approval.isCompleted = '완료문서';
+                        approval.requestStatusCode === 'COMPLETE' ? 
+                        approval.isCompleted = '완료문서' : approval.isCompleted  = '대기문서';
                     })
                 this.approvalList = res.data.body;
                 }
-            })
-    },
-    method: {
+            });
     },
     data() {
       return {
