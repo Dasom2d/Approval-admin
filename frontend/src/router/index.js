@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import LoginPage from '@/components/login/Login'
 import MainPage from '@/components/view/main/Main'
-import DetailPage from '@/components/view/Detail'
+import DetailPage from '@/components/view/detail/Detail'
 
 Vue.use(Router)
 

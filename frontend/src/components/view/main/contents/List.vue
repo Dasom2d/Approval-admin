@@ -15,11 +15,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>1</tr>
-                        <tr>휴가신청서</tr>
-                        <tr>죠르디</tr>
-                        <tr>2021.03.12</tr>
-                        <tr>2021.03.15</tr>
+                        <tr>
+                            <td>1</td>
+                                <td>
+                                    <router-link to="/view"> te</router-link>
+                                </td>
+                            <td>죠르디</td>
+                            <td>2021.03.12</td>
+                            <td>2021.03.15</td>
+                        </tr>
                     </tbody>
             </table>
             </div>
