@@ -27,7 +27,7 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApproval")
-    public ResponseEntity<ApprovalResponse<Approval.ApprovalDocument>> getApproval(@RequestBody Approval.Search search) {
+    public ResponseEntity<ApprovalResponse<Approval.ApprovalDocument>> getApproval(Approval.Search search) {
         Approval.ApprovalDocument approvalDocument = approvalService.getApproval(search);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -43,7 +43,7 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApprovalList")
-    public ResponseEntity<ApprovalResponse<List<Approval.ApprovalDocument>>> getApprovalList(@RequestBody Approval.Search search) {
+    public ResponseEntity<ApprovalResponse<List<Approval.ApprovalDocument>>> getApprovalList(Approval.Search search) {
         List<Approval.ApprovalDocument> approvalDocumentList = approvalService.getApprovalList(search);
 
         return ResponseEntity.status(HttpStatus.OK)

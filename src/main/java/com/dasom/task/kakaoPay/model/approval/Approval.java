@@ -47,6 +47,7 @@ public class Approval {
         private Integer approveMemberId;
         private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
+        private Integer registerMemberId;
     }
 
 
@@ -59,7 +60,6 @@ public class Approval {
         private String approveMemberName;
         private RequestStatusCode requestStatusCode;
         private ApprovalStatusCode approveStatusCode;
-        private Boolean isCompleted;
         private Date approveDate;
         private Date registerDate;
     }
@@ -75,6 +75,5 @@ public class Approval {
     public static boolean isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode){
         return approvalStatusCode.equals(ApprovalStatusCode.REQUEST) && requestStatusCode.equals(RequestStatusCode.WAIT);
     }
-
 
 }

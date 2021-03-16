@@ -23,13 +23,17 @@
             resultType="com.dasom.task.kakaoPay.model.approval.Approval$ApprovalDocument">
 
         SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
-                mem2.name as approveMemberName, avl.request_status_code, avl.register_date, avl.approve_date
+                mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
+                avl.register_date, avl.approve_date
         FROM approval avl
             INNER JOIN member mem1 ON avl.request_member_id = mem1.member_id
             INNER JOIN member as mem2 ON avl.approve_member_id = mem2.member_id
         WHERE 1=1
         <if test="title != null">
             AND avl.title = #{title}
+        </if>
+        <if test="registerMemberId != null">
+            AND avl.register_member_id = #{registerMemberId}
         </if>
         <if test="requestMemberId != null">
             AND avl.request_member_id = #{requestMemberId}

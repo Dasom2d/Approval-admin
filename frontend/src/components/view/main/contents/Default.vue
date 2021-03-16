@@ -8,11 +8,11 @@
                     </div>
                     <div class="section_main">
                         <ul class="lst_type">
-                            <li>
+                            <li v-for="(approval, idx) in approvalList" :key="idx">
                                 <em>완료문서</em>
-                                <p>휴가신청서</p>
+                                <p>{{approval.title}}</p>
                                 <span>
-                                    <a>죠르디</a>
+                                    <a>{{approval.requestMemberName}}</a>
                                     <span>2021.03.16</span>
                                 </span>
                             </li>
@@ -26,14 +26,31 @@
 
 
 <script>
+import axios from 'axios'
+
 
 export default {
-  name: 'Default',
-  components: {
-  },
-  data() {
-    return {
+    name: 'Default',
+    mounted() {
+        let params = {
+            registerMemberId: this.$store.state.memberInfo.memberId
+        }
+        axios.get('/api/approval/getApprovalList', {params: params})
+            .then(res => {
+                if(res.data.code === 0) {
+                    res.data.body.forEach(approval => {
+                        approval.isCompleted = '완료문서';
+                    })
+                this.approvalList = res.data.body;
+                }
+            })
+    },
+    method: {
+    },
+    data() {
+      return {
+        approvalList: []
+      }
     }
-  }
 }
 </script>

@@ -2,21 +2,21 @@
   <div id='container'>
     <div>{{this.$store.state.memberInfo.name}} 님의 문서</div>
       <button @click="$router.push({path: '/'})">로그아웃</button>
-      <SuvNav></SuvNav>
+      <SubNav></SubNav>
       <Contents></Contents>
   </div>
 </template>
 
 
 <script>
-import SuvNav from '@/components/view/main/nav/SuvNav'
+import SubNav from '@/components/view/main/nav/SubNav'
 import Contents from '@/components/view/main/contents/Contents'
 
 
 export default {
   name: 'Main',
   components: {
-    'SuvNav': SuvNav,
+    'SubNav': SubNav,
     'Contents': Contents
   },
   data() {
