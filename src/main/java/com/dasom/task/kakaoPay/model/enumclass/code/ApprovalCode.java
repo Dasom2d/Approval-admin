@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ApprovalCode {
+    FIND_SUCCESS("approval.find.success", 0),
 
     REGISTER_SUCCESS("approval.register.success", 0),
     UPDATE_SUCCESS("approval.register.update", 0),
