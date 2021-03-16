@@ -2,7 +2,7 @@
     <div id="list">
         <div id="content">
             <div class="section_tit frst">
-                <h3>완료문서<span class="tit_dsc"> 총 8 건</span>
+                <h3>완료문서<span class="tit_dsc"> 총 {{approvalList.length}} 건</span>
                 </h3>
                 <table id="approval-list">
                     <thead>

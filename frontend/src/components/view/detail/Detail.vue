@@ -8,10 +8,10 @@
             <span>요청자</span>
           </div>
           <div class='name'> 
-            <span title='요청자'> 죠르디</span>
+            <span title='요청자'> {{requestMemberName}}</span>
           </div>
           <div class='date'> 
-            <span title='요청일자'> 2020.03.11</span>
+            <span title='요청일자'> {{registerDate}}</span>
           </div>
         </li>
         <li>
@@ -19,10 +19,10 @@
             <span>승인자</span>
           </div>
           <div class='name'> 
-            <span title='요청자'> 라이언</span>
+            <span title='요청자'> {{approveStatusCode}}</span>
           </div>
           <div class='date'> 
-            <span title='요청일자'> 2020.03.11</span>
+            <span title='요청일자'> {{approveDate}}</span>
           </div>
         </li>
       </ul>
@@ -37,7 +37,7 @@
                 <tr>
                     <th scope="col"><div class="th">제목</div></th>
                     <td><div class="td">
-                        <input type="text" title="카드명 입력란" class="ipt_txt" placeholder="" style="width:200px">
+                        <input type="text" title="제목 입력란" class="ipt_txt" placeholder="" style="width:200px">
                     </div></td>
                 </tr>
                 <tr>
@@ -59,14 +59,43 @@
 
 <script>
 
+import axios from 'axios'
+
 export default {
-  name: 'Main',
-  data() {
-    return {
-      
+   name: 'Detail',
+   mounted: function() {
+        let params = {
+            approvalId: 1
+        }
+        axios.get('/api/approval/getApproval', {params: params})
+            .then(res => {
+                if(res.data.code === 0) {
+                    console.log(res.data.body);
+                    
+                    this.requestMemberName= res.data.body.requestMemberName;
+                    this.approveMemberName= res.data.body.approveMemberName;
+                    this.requestStatusCode= res.data.body.requestStatusCode;
+                    this.approveStatusCode= res.data.body.approveStatusCode;
+                    this.title= res.data.body.title;
+                    this.content= res.data.body.content;
+                    this.registerDate= res.data.body.registerDate;
+                    this.approveDate= res.data.body.approveDate;
+                }
+            });
+    },
+    data() {
+      return {
+        approvalId: '',
+        requestMemberName: '',
+        approveMemberName: '',
+        requestStatusCode: '',
+        approveStatusCode: '',
+        title: '',
+        content: '',
+        registerDate: '',
+        approveDate: '',
+      }
     }
-  },
-  method: {
-  }
+  
 }
 </script>
