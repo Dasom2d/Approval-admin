@@ -7,7 +7,7 @@
             resultType="com.dasom.task.kakaoPay.model.approval.Approval">
 
         SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
-                mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
+                mem2.name as approveMemberName, avl.approval_status_code, avl.request_status_code,
                 avl.register_date, avl.approve_date
         FROM approval avl
             INNER JOIN member mem1 ON avl.request_member_id = mem1.member_id
@@ -23,7 +23,7 @@
             resultType="com.dasom.task.kakaoPay.model.approval.Approval">
 
         SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
-                mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
+                mem2.name as approveMemberName, avl.approval_status_code, avl.request_status_code,
                 avl.register_date, avl.approve_date
         FROM approval avl
             INNER JOIN member mem1 ON avl.request_member_id = mem1.member_id
@@ -45,7 +45,7 @@
             AND avl.request_status_code = #{requestStatusCode}
         </if>
         <if test="approvalStatusCode != null">
-            AND avl.approve_status_code = #{approvalStatusCode}
+            AND avl.approval_status_code = #{approvalStatusCode}
         </if>
 
     </select>
@@ -54,7 +54,7 @@
     <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
         INSERT INTO approval
             (title, content, request_member_id, approve_member_id,
-             approve_status_code, request_status_code,  register_date, register_member_id)
+             approval_status_code, request_status_code,  register_date, register_member_id)
         VALUES(
             #{title}, #{content}, #{requestMemberId}, #{approveMemberId},
             #{approvalStatusCode}, #{requestStatusCode}, now(), #{registerMemberId});
@@ -74,7 +74,7 @@
             ,content = #{content}
         </if>
         <if test="approvalStatusCode != null">
-            ,approve_status_code = #{approvalStatusCode}
+            ,approval_status_code = #{approvalStatusCode}
         </if>
         <if test="requestStatusCode != null">
             ,request_status_code = #{requestStatusCode}

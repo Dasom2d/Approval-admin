@@ -56,7 +56,7 @@ public class ApprovalController {
      * @return ResponseEntity
      */
 
-    @PostMapping("/registerApproval")
+    @PostMapping
     @ResponseBody
     public ResponseEntity registerApproval(@RequestBody Approval.Param param) {
         approvalService.registerApproval(param);
@@ -73,8 +73,9 @@ public class ApprovalController {
      * @return ResponseEntity
      */
 
-    @PutMapping("/updateApproval")
-    public ResponseEntity updateApproval(Approval.Param param) {
+    @PutMapping
+    @ResponseBody
+    public ResponseEntity updateApproval(@RequestBody Approval.Param param) {
         approvalService.updateApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -89,8 +90,9 @@ public class ApprovalController {
      * @return ResponseEntity
      */
 
-    @DeleteMapping("/deteleApproval")
-    public ResponseEntity deleteApproval(Approval.Param param) {
+    @DeleteMapping
+    @ResponseBody
+    public ResponseEntity deleteApproval(@RequestBody Approval.Param param) {
         approvalService.deleteApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)

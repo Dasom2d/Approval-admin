@@ -61,7 +61,7 @@ public class ApprovalValidator {
         return true;
     }
 
-    public void isValidUpdate(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode) {
+    public void isValidUpdateDelete(ApprovalStatusCode approvalStatusCode, RequestStatusCode requestStatusCode) {
         if(!isValidUpdateStatusCode(approvalStatusCode, requestStatusCode)) {
             throw new ApprovalBadRequestException("요청 상태의 문서만 수정 혹은 삭제 가능합니다.", ApprovalCode.INAPPOSITE_APPROVAL_STATUS.getCode());
         }

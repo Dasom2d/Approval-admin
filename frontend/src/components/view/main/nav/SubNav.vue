@@ -4,15 +4,15 @@
             <h3 @click="goRegister">기안 신청하기</h3>
         </div>
         <div class="nav_lst">
-            <h3 @click="setSearchParam('WAIT')">진행중인 결재 문서</h3>
+            <h3 @click="setSearchParam('WAIT')">진행중인 결재 문서 </h3>
             <ul>
-                <li @click="setSearchParam('WAIT', 'requestId', null)">결재할 문서</li>
-                <li @click="setSearchParam('WAIT', null, 'approveId')">상신/결재한 문서</li>
+                <li @click="setSearchParam('WAIT', null, $store.state.memberInfo.memberId)">(윗사람이)결재할 문서</li>
+                <li @click="setSearchParam('WAIT', null, null, $store.state.memberInfo.memberId)">(내가)상신/결재한 문서</li>
             </ul>
             <h3 @click="setSearchParam('COMPLETE')">완료된 결재 문서</h3>
             <ul>
-                <li @click="setSearchParam('COMPLETE', null, null, 'APPROVE')">완료문서</li>
-                <li @click="setSearchParam('COMPLETE', null, null, 'RETURN')">반려문서</li>
+                <li @click="setSearchParam('COMPLETE', null, $store.state.memberInfo.memberId)">완료문서</li>
+                <li @click="setSearchParam('COMPLETE', 'RETURN', $store.state.memberInfo.memberId)">반려문서</li>
             </ul>
         </div>
     </div>
@@ -29,19 +29,20 @@ export default {
       goRegister () {
           this.$router.push({name: 'register', params: {type: 'register'}});
       },
-      setSearchParam (requestStatusCode, requestMemberId, approveMemberId, approveStatusCode) {
+      setSearchParam (requestStatusCode, approvalStatusCode, requestMemberId, approveMemberId) {
           let param = {
               requestStatusCode: requestStatusCode,
-              approveStatusCode: approveStatusCode
+              approvalStatusCode: approvalStatusCode,
+              requestMemberId: requestMemberId,
+              approveMemberId: approveMemberId
           }
-        requestMemberId != null ? 
-              param.requestMemberId = this.$store.state.memberInfo.memberId : '';
-        approveMemberId != null ? 
-              param.approveMemberId = this.$store.state.memberInfo.memberId : '';
+          EventBus.$emit('deliverSearchParam', param);
 
-        
-        EventBus.$emit('deliverSearchParam', param);
-
+      }
+  },
+  data() {
+    return {
+        approvalList: []
       }
   }
 }

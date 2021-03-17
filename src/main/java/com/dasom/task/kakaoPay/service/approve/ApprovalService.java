@@ -59,7 +59,7 @@ public class ApprovalService {
      */
     public Integer updateApproval(Approval.Param param) {
         approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
-        approvalValidator.isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalValidator.isValidUpdateDelete(param.getApprovalStatusCode(), param.getRequestStatusCode());
         approvalRepository.updateApproval(param);
         return param.getApprovalId();
     }
@@ -77,8 +77,7 @@ public class ApprovalService {
      * 기안 삭제
      */
     public Integer deleteApproval(Approval.Param param) {
-        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
-        approvalValidator.isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalValidator.isValidUpdateDelete(param.getApprovalStatusCode(), param.getRequestStatusCode());
         approvalRepository.deleteApproval(param);
         return param.getApprovalId();
     }

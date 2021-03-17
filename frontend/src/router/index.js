@@ -30,10 +30,5 @@ export default new Router({
       component: DetailPage,
       props: true
     }
-    // {
-    //   path: '/detail',
-    //   alias: ['/register', '/modify', '/view'],
-    //   component: DetailPage
-    // }
   ]
 })
