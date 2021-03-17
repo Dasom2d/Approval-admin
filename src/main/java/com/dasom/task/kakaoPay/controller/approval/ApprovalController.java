@@ -59,8 +59,10 @@ public class ApprovalController {
      */
 
     @PostMapping("/registerApproval")
-    public ResponseEntity registerApproval(Approval approval) {
-        approvalService.registerApproval(approval);
+    @ResponseBody
+    public ResponseEntity registerApproval(@RequestBody Approval.AddParam approval) {
+        System.out.println(approval);
+      //  approvalService.registerApproval(approval);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),

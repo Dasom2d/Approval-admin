@@ -57,7 +57,7 @@
              approve_status_code, request_status_code,  register_date, register_member_id)
         VALUES(
             #{title}, #{content}, #{requestMemberId}, #{approveMemberId},
-            #{approvalStatusCode}, #{requestStatusCode}, #{registerDate}, #{registerMemberId});
+            #{approvalStatusCode}, #{requestStatusCode}, now(), #{registerMemberId});
         <selectKey keyProperty="approvalId" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>

@@ -17,9 +17,7 @@
                     <tbody>
                         <tr v-for="(approval, idx) in approvalList" :key="idx">
                             <td>{{approval.approvalId}}</td>
-                                <td>
-                                    <router-link to="/view"> {{approval.title}}</router-link>
-                                </td>
+                            <td @click="goView(approval.approvalId)">{{approval.title}}</td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>2021.03.12</td>
                             <td>2021.03.15</td>
@@ -47,18 +45,20 @@ export default {
       })
   },
     methods: {
+        goView(id) {
+          this.$router.push({name: 'view', params: {type: 'view', approvalId: id}})
+        },
         getApprovalList() {
-            
-        axios.get('/api/approval/getApprovalList', {params: this.searchParam})
-            .then(res => {
-                if(res.data.code === 0) {
-                    res.data.body.forEach(approval => {
-                        approval.requestStatusCode === 'COMPLETE' ? 
-                        approval.isCompleted = '완료문서' : approval.isCompleted  = '대기문서';
-                    })
-                this.approvalList = res.data.body;
-                }
-            });
+            axios.get('/api/approval/getApprovalList', {params: this.searchParam})
+                .then(res => {
+                    if(res.data.code === 0) {
+                        res.data.body.forEach(approval => {
+                            approval.requestStatusCode === 'COMPLETE' ? 
+                            approval.isCompleted = '완료문서' : approval.isCompleted  = '대기문서';
+                        })
+                    this.approvalList = res.data.body;
+                    }
+                });
         }
     },
   data () {

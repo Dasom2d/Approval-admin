@@ -19,9 +19,21 @@ export default new Router({
       component: MainPage
     },
     {
-      path: '/detail',
-      alias: ['/register', '/modify', '/view'],
-      component: DetailPage
+      name: 'register',
+      path: '/register',
+      component: DetailPage,
+      props: true
+    },
+    {
+      name: 'view',
+      path: '/view',
+      component: DetailPage,
+      props: true
     }
+    // {
+    //   path: '/detail',
+    //   alias: ['/register', '/modify', '/view'],
+    //   component: DetailPage
+    // }
   ]
 })

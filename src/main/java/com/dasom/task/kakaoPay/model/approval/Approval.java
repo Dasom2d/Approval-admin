@@ -38,6 +38,25 @@ public class Approval {
         this.approveMemberId = approveMember.getMemberId();
     }
 
+    @Getter
+    @Setter
+    public static class AddParam {
+        private String title;
+        private String content;
+        private Member requestMember;
+        private Member approveMember;
+        private ApprovalStatusCode approvalStatusCode;
+        private RequestStatusCode requestStatusCode;
+
+        @Getter
+        @Setter
+        public static class Member {
+            private Integer memberId;
+            private String name;
+            private Integer gradeId;
+        }
+    }
+
 
     @Data
     public static class Search {

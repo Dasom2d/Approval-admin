@@ -9,8 +9,8 @@
                     <div class="section_main">
                         <ul class="lst_type">
                             <li v-for="(approval, idx) in approvalList" :key="idx">
-                                <em>완료문서</em>
-                                <p><router-link to="/detail">{{approval.title}}</router-link></p>
+                                <em>{{approval.approvalType}}</em>
+                                <p @click="goView(approval.approvalId)">{{approval.title}}</p>
                                 <span>
                                     <a>{{approval.requestMemberName}}</a>
                                     <span>2021.03.16</span>
@@ -40,11 +40,16 @@ export default {
                 if(res.data.code === 0) {
                     res.data.body.forEach(approval => {
                         approval.requestStatusCode === 'COMPLETE' ? 
-                        approval.isCompleted = '완료문서' : approval.isCompleted  = '대기문서';
+                        approval.approvalType = '완료문서' : approval.approvalType  = '대기문서';
                     })
                 this.approvalList = res.data.body;
                 }
             });
+    },
+    methods: {
+        goView(id) {
+          this.$router.push({name: 'view', params: {type: 'view', approvalId: id}})
+        }
     },
     data() {
       return {

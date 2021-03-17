@@ -1,6 +1,8 @@
 package com.dasom.task.kakaoPay.service.approve;
 
 import com.dasom.task.kakaoPay.model.approval.Approval;
+import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
+import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
 import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +46,12 @@ public class ApprovalService {
      */
     @Transactional
     public Integer registerApproval(Approval approval) {
-        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
+        approval.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        approval.setRequestStatusCode(RequestStatusCode.WAIT);
+        // 고쳐야함
+        approval.setRegisterMemberId(2);
 
+        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
         approvalRepository.registerApproval(approval);
         return approval.getApprovalId();
     }
