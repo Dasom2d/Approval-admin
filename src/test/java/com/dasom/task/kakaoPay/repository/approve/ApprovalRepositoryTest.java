@@ -4,7 +4,6 @@ import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.DateUtil.now;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -47,7 +45,7 @@ public class ApprovalRepositoryTest {
         search.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
 
         // when
-        List<Approval.ApprovalDocument> result = approvalRepository.getApprovalList(search);
+        List<Approval> result = approvalRepository.getApprovalList(search);
 
         // then
         assertThat(result.get(0).getApprovalId()).isEqualTo(search.getApprovalId());
@@ -61,7 +59,7 @@ public class ApprovalRepositoryTest {
         search.setApprovalId(1);
 
         // when
-        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
+        Approval result = approvalRepository.getApproval(search);
 
         // then
         assertThat(result.getApprovalId()).isEqualTo(search.getApprovalId());
@@ -70,57 +68,57 @@ public class ApprovalRepositoryTest {
     @Test
     public void 등록테스트 () {
         // given
-        Approval approval = new Approval();
-        approval.setTitle("테스트 신청서");
-        approval.setContent("테스트 신청합니다.");
-        approval.setApproveMemberId(1);
-        approval.setRequestMemberId(4);
-        approval.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        approval.setRequestStatusCode(RequestStatusCode.WAIT);
-        approval.setRegisterDate(now());
-        approval.setRegisterMemberId(4);
+        Approval.Param param = new Approval.Param();
+        param.setTitle("테스트 신청서");
+        param.setContent("테스트 신청합니다.");
+        param.setApproveMemberId(1);
+        param.setRequestMemberId(4);
+        param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        param.setRequestStatusCode(RequestStatusCode.WAIT);
+        param.setRegisterDate(now());
+        param.setRegisterMemberId(4);
 
         // when
-        approvalRepository.registerApproval(approval);
+        approvalRepository.registerApproval(param);
 
         // then
         Approval.Search search = new Approval.Search();
-        search.setApprovalId(approval.getApprovalId());
-        Approval.ApprovalDocument result = approvalRepository.getApproval(search);
+        search.setApprovalId(param.getApprovalId());
+        Approval result = approvalRepository.getApproval(search);
         assertThat(result.getApprovalId()).isEqualTo(search.getApprovalId());
    }
 
    @Test
     public void 수정테스트 () {
         // given
-       Approval approval = new Approval();
-       approval.setApprovalId(1);
-       approval.setContent("테스트 내용 수정합니다.");
+       Approval.Param param = new Approval.Param();
+       param.setApprovalId(1);
+       param.setContent("테스트 내용 수정합니다.");
 
        // when
-       approvalRepository.updateApproval(approval);
+       approvalRepository.updateApproval(param);
 
        // then
        Approval.Search search = new Approval.Search();
        search.setApprovalId(1);
-       Approval.ApprovalDocument result = approvalRepository.getApproval(search);
-       assertThat(result.getContent()).isEqualTo(approval.getContent());
+       Approval result = approvalRepository.getApproval(search);
+       assertThat(result.getContent()).isEqualTo(param.getContent());
 
    }
 
    @Test
     public void deleteApproval() {
         // given
-       Approval approval = new Approval();
-       approval.setApprovalId(1);
+       Approval.Param param = new Approval.Param();
+       param.setApprovalId(1);
 
        // when
-       approvalRepository.deleteApproval(approval);
+       approvalRepository.deleteApproval(param);
 
        // then
        Approval.Search search = new Approval.Search();
-       search.setApprovalId(approval.getApprovalId());
-       Approval.ApprovalDocument result = approvalRepository.getApproval(search);
+       search.setApprovalId(param.getApprovalId());
+       Approval result = approvalRepository.getApproval(search);
        assertNull(result);
    }
 

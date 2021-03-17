@@ -2,7 +2,6 @@ package com.dasom.task.kakaoPay.repository.approval;
 
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,24 +19,24 @@ public class ApprovalRepository {
     private static final String PREFIX = ApprovalRepository.class.getCanonicalName() + ".";
 
 
-    public Approval.ApprovalDocument getApproval(Approval.Search search) {
+    public Approval getApproval(Approval.Search search) {
         return sqlSessionTemplate.selectOne(PREFIX + "getApproval", search);
     }
 
-    public List<Approval.ApprovalDocument> getApprovalList(Approval.Search search) {
+    public List<Approval> getApprovalList(Approval.Search search) {
         return sqlSessionTemplate.selectList(PREFIX + "getApprovalList", search);
     }
 
-    public Integer registerApproval(Approval approval) {
-        return sqlSessionTemplate.insert(PREFIX + "insertApproval", approval);
+    public Integer registerApproval(Approval.Param param) {
+        return sqlSessionTemplate.insert(PREFIX + "insertApproval", param);
     }
 
-    public Integer updateApproval(Approval approval) {
-        return sqlSessionTemplate.insert(PREFIX + "updateApproval", approval);
+    public Integer updateApproval(Approval.Param param) {
+        return sqlSessionTemplate.insert(PREFIX + "updateApproval", param);
     }
 
-    public Integer deleteApproval(Approval approval) {
-        return sqlSessionTemplate.delete(PREFIX + "deleteApproval", approval);
+    public Integer deleteApproval(Approval.Param param) {
+        return sqlSessionTemplate.delete(PREFIX + "deleteApproval", param);
     }
 
 }

@@ -4,7 +4,7 @@
 <mapper namespace="com.dasom.task.kakaoPay.repository.approval.ApprovalRepository">
 
     <select id="getApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Search"
-            resultType="com.dasom.task.kakaoPay.model.approval.Approval$ApprovalDocument">
+            resultType="com.dasom.task.kakaoPay.model.approval.Approval">
 
         SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
                 mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
@@ -20,7 +20,7 @@
     </select>
 
     <select id="getApprovalList" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Search"
-            resultType="com.dasom.task.kakaoPay.model.approval.Approval$ApprovalDocument">
+            resultType="com.dasom.task.kakaoPay.model.approval.Approval">
 
         SELECT avl.approval_id, avl.title, avl.content, mem1.name as requestMemberName,
                 mem2.name as approveMemberName, avl.approve_status_code, avl.request_status_code,
@@ -51,7 +51,7 @@
     </select>
 
 
-    <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
+    <insert id="insertApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
         INSERT INTO approval
             (title, content, request_member_id, approve_member_id,
              approve_status_code, request_status_code,  register_date, register_member_id)
@@ -63,7 +63,7 @@
         </selectKey>
     </insert>
 
-    <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
+    <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
         update approval
         set
             modify_date = now()
@@ -88,7 +88,7 @@
         where approval_id = #{approvalId}
     </update>
 
-    <delete id="deleteApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval">
+    <delete id="deleteApproval" parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
         delete
         from approval
         where 1=1

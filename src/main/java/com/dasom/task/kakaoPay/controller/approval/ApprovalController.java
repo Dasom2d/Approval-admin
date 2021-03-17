@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/approval")
 public class ApprovalController {
 
-
     @Autowired
     private ApprovalService approvalService;
 
@@ -27,9 +26,8 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApproval")
-    public ResponseEntity<ApprovalResponse<Approval.ApprovalDocument>> getApproval(Approval.Search search) {
-        Approval.ApprovalDocument approvalDocument = approvalService.getApproval(search);
-
+    public ResponseEntity<ApprovalResponse<Approval>> getApproval(Approval.Search search) {
+        Approval approvalDocument = approvalService.getApproval(search);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.FIND_SUCCESS.getMessageCode(),
                         ApprovalCode.FIND_SUCCESS.getCode(),
@@ -43,8 +41,8 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApprovalList")
-    public ResponseEntity<ApprovalResponse<List<Approval.ApprovalDocument>>> getApprovalList(Approval.Search search) {
-        List<Approval.ApprovalDocument> approvalDocumentList = approvalService.getApprovalList(search);
+    public ResponseEntity<ApprovalResponse<List<Approval>>> getApprovalList(Approval.Search search) {
+        List<Approval> approvalDocumentList = approvalService.getApprovalList(search);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.FIND_SUCCESS.getMessageCode(),
@@ -54,15 +52,14 @@ public class ApprovalController {
 
     /**
      * 기안 상신
-     * @param approval
+     * @param param
      * @return ResponseEntity
      */
 
     @PostMapping("/registerApproval")
     @ResponseBody
-    public ResponseEntity registerApproval(@RequestBody Approval.AddParam approval) {
-        System.out.println(approval);
-      //  approvalService.registerApproval(approval);
+    public ResponseEntity registerApproval(@RequestBody Approval.Param param) {
+        approvalService.registerApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
@@ -72,13 +69,13 @@ public class ApprovalController {
 
     /**
      * 기안 수정
-     * @param approval
+     * @param param
      * @return ResponseEntity
      */
 
     @PutMapping("/updateApproval")
-    public ResponseEntity updateApproval(Approval approval) {
-        approvalService.updateApproval(approval);
+    public ResponseEntity updateApproval(Approval.Param param) {
+        approvalService.updateApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApprovalResponse.of(ApprovalCode.UPDATE_SUCCESS.getMessageCode(),
@@ -88,13 +85,13 @@ public class ApprovalController {
 
     /**
      * 기안 삭제
-     * @param approval
+     * @param param
      * @return ResponseEntity
      */
 
     @DeleteMapping("/deteleApproval")
-    public ResponseEntity deleteApproval(Approval approval) {
-        approvalService.deleteApproval(approval);
+    public ResponseEntity deleteApproval(Approval.Param param) {
+        approvalService.deleteApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApprovalResponse.of(ApprovalCode.DELETE_SUCCESS.getMessageCode(),

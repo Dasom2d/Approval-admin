@@ -8,7 +8,6 @@ import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,17 +17,17 @@ public class ApprovalService {
 
     private ApprovalRepository approvalRepository;
 
+    @Autowired
+    private ApprovalValidator approvalValidator;
+
     public ApprovalService(ApprovalRepository approvalRepository) {
         this.approvalRepository = approvalRepository;
     }
 
-    @Autowired
-    private ApprovalValidator approvalValidator;
-
     /**
      * 기안 리스트 조회
      */
-    public List<Approval.ApprovalDocument> getApprovalList(Approval.Search search) {
+    public List<Approval> getApprovalList(Approval.Search search) {
 
         return approvalRepository.getApprovalList(search);
     }
@@ -36,7 +35,7 @@ public class ApprovalService {
     /**
      * 기안 조회
      */
-    public Approval.ApprovalDocument getApproval(Approval.Search search) {
+    public Approval getApproval(Approval.Search search) {
         return approvalRepository.getApproval(search);
     }
 
@@ -44,26 +43,25 @@ public class ApprovalService {
     /**
      * 기안 상신
      */
-    @Transactional
-    public Integer registerApproval(Approval approval) {
-        approval.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
-        approval.setRequestStatusCode(RequestStatusCode.WAIT);
+    public Integer registerApproval(Approval.Param param) {
+        param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
+        param.setRequestStatusCode(RequestStatusCode.WAIT);
         // 고쳐야함
-        approval.setRegisterMemberId(2);
+        param.setRegisterMemberId(2);
 
-        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
-        approvalRepository.registerApproval(approval);
-        return approval.getApprovalId();
+        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
+        approvalRepository.registerApproval(param);
+        return param.getApprovalId();
     }
 
     /**
      * 기안 수정
      */
-    public Integer updateApproval(Approval approval) {
-        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
-        approvalValidator.isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
-        approvalRepository.updateApproval(approval);
-        return approval.getApprovalId();
+    public Integer updateApproval(Approval.Param param) {
+        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
+        approvalValidator.isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalRepository.updateApproval(param);
+        return param.getApprovalId();
     }
 
 //
@@ -78,11 +76,11 @@ public class ApprovalService {
     /**
      * 기안 삭제
      */
-    public Integer deleteApproval(Approval approval) {
-        approvalValidator.isValidApproveGrade(approval.getApproveMemberGradeId(), approval.getRequestMemberGradeId());
-        approvalValidator.isValidUpdate(approval.getApprovalStatusCode(), approval.getRequestStatusCode());
-        approvalRepository.deleteApproval(approval);
-        return approval.getApprovalId();
+    public Integer deleteApproval(Approval.Param param) {
+        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
+        approvalValidator.isValidUpdate(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalRepository.deleteApproval(param);
+        return param.getApprovalId();
     }
 
 

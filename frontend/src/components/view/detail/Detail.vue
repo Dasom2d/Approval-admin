@@ -95,8 +95,10 @@ export default {
       let addParams = {
         title: this.title,
         content: this.content,
-        requestMember: this.$store.state.memberInfo,
-        approveMember: {memberId: 1, name: '라이언', gradeId: 1}
+        approveMemberId: 1,
+        requestMemberId: 4, 
+        approveMemberGradeId: 1,
+        requestMemberGradeId: 4,
       }
 
       axios.post('/api/approval/registerApproval', addParams)
