@@ -18,7 +18,7 @@ public class ApprovalController {
 
     @Autowired
     private ApprovalService approvalService;
-
+    
     /**
      * 기안 조회
      * @param search

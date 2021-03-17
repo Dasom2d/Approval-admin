@@ -19,7 +19,8 @@
                     <tbody>
                         <tr v-for="(approval, idx) in approvalList" :key="idx">
                             <td>{{approval.approvalId}}</td>
-                            <td @click="goView(approval.approvalId)">{{approval.title}}</td>
+                            <td><router-link :to="`view/${approval.approvalId}`">
+                                {{approval.title}}</router-link></td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
                             <td>{{approval.approvalType}}</td>
@@ -49,9 +50,6 @@ export default {
       })
   },
     methods: {
-        goView(id) {
-          this.$router.push({name: 'view', params: {type: 'view', approvalId: id}})
-        },
         getApprovalList() {
             axios.get('/api/approval/getApprovalList', {params: this.searchParam})
                 .then(res => {

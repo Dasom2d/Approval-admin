@@ -1,7 +1,7 @@
 <template>
     <div id="sub_nav">
         <div class="nav_lst first" style="padding-top:14px;padding-bottom:14px;">
-            <h3 @click="goRegister">기안 신청하기</h3>
+            <h3><router-link to="/register">기안 신청하기</router-link></h3>
         </div>
         <div class="nav_lst">
             <h3 @click="setSearchParam('WAIT')">진행중인 결재 문서 </h3>
@@ -26,9 +26,6 @@ import EventBus from '@/js/eventBus'
 export default {
   name: 'SubNav',
   methods: {
-      goRegister () {
-          this.$router.push({name: 'register', params: {type: 'register'}});
-      },
       setSearchParam (requestStatusCode, approvalStatusCode, requestMemberId, approveMemberId) {
           let param = {
               requestStatusCode: requestStatusCode,

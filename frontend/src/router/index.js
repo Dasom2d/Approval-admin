@@ -26,9 +26,8 @@ export default new Router({
     },
     {
       name: 'view',
-      path: '/view',
-      component: DetailPage,
-      props: true
+      path: '/view/:id',
+      component: DetailPage
     }
   ]
 })

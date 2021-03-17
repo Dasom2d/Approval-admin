@@ -53,7 +53,7 @@
             </table>
         </div>
     <div>
-      <button @click="$router.push({path: 'main'})">목록으로</button>
+      <button @click="$router.push({path: '/main'})">목록으로</button>
       <button v-if="type==='register'" @click="registApproval()">등록하기</button>
       <button v-if="type==='view' && requestStatusCode === 'WAIT'" @click="goEdit()">편집</button>
       <button v-if="type==='view' && requestStatusCode === 'WAIT'" @click="deleteApproval()">삭제</button>
@@ -77,9 +77,10 @@ const REQUEST_STATUS_CODE = {
 export default {
   name: 'Detail',
   mounted: function() {
-    this.type = this.$attrs.type;
+    this.type = this.$route.name;
     if(this.type === 'view' || this.type === 'update'){
-      this.getApproval(this.$attrs.approvalId);
+      let approvalId = this.$route.params.id;
+      this.getApproval(approvalId);
     }
   },
   methods: {

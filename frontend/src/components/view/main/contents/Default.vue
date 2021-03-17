@@ -10,7 +10,8 @@
                         <ul class="lst_type">
                             <li v-for="(approval, idx) in approvalList" :key="idx">
                                 <em>{{approval.approvalType}}</em>
-                                <p @click="goView(approval.approvalId)">{{approval.title}}</p>
+                                <p><router-link :to="`view/${approval.approvalId}`">
+                                        {{approval.title}}</router-link></p>
                                 <span>
                                     <a>{{approval.requestMemberName}}</a>
                                     <span>2021.03.16</span>
@@ -47,9 +48,6 @@ export default {
             });
     },
     methods: {
-        goView(id) {
-          this.$router.push({name: 'view', params: {type: 'view', approvalId: id}})
-        }
     },
     data() {
       return {
