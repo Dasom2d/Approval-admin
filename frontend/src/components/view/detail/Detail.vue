@@ -2,6 +2,10 @@
   <div >
       기안신청서
     <div>
+      <ModalView v-if="isModalViewed" @close-modal="isModalViewed = false">
+        <SelectApproveMember msg="Hello Vue in CodeSandbox!" />
+      </ModalView>
+      <button @click="isModalViewed = true">승인자 선택</button>
       <ul>
         <li>{{approvalState}}</li>
       </ul>
@@ -65,8 +69,9 @@
 
 
 <script>
-
 import axios from 'axios'
+import SelectApproveMember from '@/components/view/detail/modal/SelectApproveMember'
+import ModalView from '@/components/view/common/ModalView'
 
 const REQUEST_STATUS_CODE = {
   REQUEST: '요청중',
@@ -76,6 +81,10 @@ const REQUEST_STATUS_CODE = {
 
 export default {
   name: 'Detail',
+  components: {
+    'SelectApproveMember': SelectApproveMember,
+    'ModalView': ModalView
+  },
   mounted: function() {
     this.type = this.$route.name;
     if(this.type === 'view' || this.type === 'update'){
@@ -154,6 +163,7 @@ export default {
     },
     data() {
       return {
+        isModalViewed: false,
         type: 'register',
         approvalId: '',
         requestMemberName: '',

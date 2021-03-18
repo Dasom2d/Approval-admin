@@ -15,9 +15,7 @@ public class ApprovalRepository {
         this.sqlSessionTemplate = sqlSessionTemplate;
     }
 
-
     private static final String PREFIX = ApprovalRepository.class.getCanonicalName() + ".";
-
 
     public Approval getApproval(Approval.Search search) {
         return sqlSessionTemplate.selectOne(PREFIX + "getApproval", search);
