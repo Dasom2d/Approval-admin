@@ -1,8 +1,11 @@
 <template>
   <div class="modal">
-    <div class="overlay" @click="$emit('close-modal')"></div>
+    <div class="overlay" @click="$emit('close')"></div>
     <div class="modal-card">
       <slot />
+              <!-- <button @click="$emit('close')">
+                OK
+              </button> -->
     </div>
   </div>
 </template>

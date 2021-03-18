@@ -2,8 +2,9 @@
   <div >
       기안신청서
     <div>
-      <ModalView v-if="isModalViewed" @close-modal="isModalViewed = false">
-        <SelectApproveMember msg="Hello Vue in CodeSandbox!" />
+      <ModalView v-if="isModalViewed" @close="isModalViewed = false">
+        <!-- <SelectApproveMember ></SelectApproveMember> -->
+        <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
       </ModalView>
       <button @click="isModalViewed = true">승인자 선택</button>
       <ul>
@@ -118,14 +119,17 @@ export default {
                   }
               });
       }, 
+      approveMember(member) {
+        this.approveMemberInfo = member;
+      },
       setParams() {
         let params = {
           title: this.title,
           content: this.content,
-          approveMemberId: 2,
-          requestMemberId: 4, 
-          approveMemberGradeId: 2,
-          requestMemberGradeId: 4,
+          approveMemberId: this.approveMemberInfo.memberId,
+          requestMemberId: this.$store.state.memberInfo.memberId, 
+          approveMemberGradeId: this.approveMemberInfo.gradeId,
+          requestMemberGradeId:this.$store.state.memberInfo.gradeId,
         }
         return params;
       },
@@ -163,11 +167,12 @@ export default {
     },
     data() {
       return {
+        approveMemberInfo: {},
         isModalViewed: false,
-        type: 'register',
-        approvalId: '',
         requestMemberName: '',
         approveMemberName: '',
+        type: 'register',
+        approvalId: '',
         requestStatusCode: '',
         approvalState: '',
         approvalStatusCode: '',

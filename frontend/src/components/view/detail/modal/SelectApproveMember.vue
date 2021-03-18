@@ -12,21 +12,20 @@
         <tbody>
           <tr v-for="(member, idx) in memberList" :key="idx">
             <td>{{member.memberId}}</td>
-            <td>{{member.name}}</td>
+            <!-- <td><a @click="$emit('test123', member)">{{member.name}}</a></td> -->
+            <td><a @click="deliverMember(member)">{{member.name}}</a></td>
             <td>{{member.gradeName}}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-              <button @click="$emit('close-modal')">
-                OK
-              </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+// import EventBus from '@/js/eventBus'
 
 export default {
   name: "SelectApproveMember",
@@ -44,6 +43,9 @@ export default {
                     this.memberList = res.data;
                   }
               });
+    },
+    deliverMember(member) {
+      this.$emit('approveMember', member);
     }
   },
     data() {

@@ -16,7 +16,7 @@
         select mbr.member_id, mbr.name, mbr.grade_id, grd.grade_name_kr as grade_name
         from member mbr
         inner join grade grd on grd.grade_id = mbr.grade_id
-        where mbr.member_id < #{memberId};
+        where mbr.member_id &lt; #{memberId};
     </select>
 
 </mapper>
