@@ -1,16 +1,17 @@
-package com.dasom.task.kakaoPay.service;
+package com.dasom.task.kakaoPay.service.approve;
 
 import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
-import com.dasom.task.kakaoPay.service.approve.ApprovalService;
+import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +31,15 @@ public class ApprovalServiceTest {
 
     ApprovalService approvalService;
     ApprovalRepository approvalRepository;
+    @Autowired
     SqlSessionTemplate sqlSessionTemplate;
+    @Autowired
+    ApprovalValidator approvalValidator;
 
     @BeforeEach
     public void beforeEach () {
         approvalRepository = new ApprovalRepository(sqlSessionTemplate);
-        approvalService = new ApprovalService(approvalRepository);
+        approvalService = new ApprovalService(approvalRepository, approvalValidator);
     }
 
     public Approval.Param setupApproval() {
@@ -138,6 +142,8 @@ public class ApprovalServiceTest {
     public void 직급상태예외_직급낮음 () {
         // given
         Approval.Param param = setupApproval();
+        param.setApproveMemberGradeId(4);
+        param.setRequestMemberGradeId(1);
 
         // when
         ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
@@ -151,6 +157,8 @@ public class ApprovalServiceTest {
     public void 직급상태예외_직급같음 () {
         // given
         Approval.Param param = setupApproval();
+        param.setApproveMemberGradeId(1);
+        param.setRequestMemberGradeId(1);
 
         // when
         ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,

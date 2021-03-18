@@ -6,7 +6,6 @@ import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
 import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
 import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +15,11 @@ import java.util.List;
 public class ApprovalService {
 
     private ApprovalRepository approvalRepository;
-
-    @Autowired
     private ApprovalValidator approvalValidator;
 
-    public ApprovalService(ApprovalRepository approvalRepository) {
+    public ApprovalService(ApprovalRepository approvalRepository, ApprovalValidator approvalValidator) {
         this.approvalRepository = approvalRepository;
+        this.approvalValidator = approvalValidator;
     }
 
     /**
