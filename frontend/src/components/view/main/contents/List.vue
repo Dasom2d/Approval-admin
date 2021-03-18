@@ -2,7 +2,7 @@
     <div id="list">
         <div id="content">
             <div class="section_tit frst">
-                <h3>완료문서<span class="tit_dsc"> 총 {{approvalList.length}} 건</span>
+                <h3>{{typeName}}<span class="tit_dsc"> 총 {{approvalList.length}} 건</span>
                 </h3>
                 <table id="approval-list">
                     <thead>
@@ -24,8 +24,8 @@
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
                             <td>{{approval.approvalType}}</td>
-                            <td>2021.03.12</td>
-                            <td>2021.03.15</td>
+                            <td>{{approval.registerDate}}</td>
+                            <td>{{approval.approveDate}}</td>
                         </tr>
                     </tbody>
             </table>
@@ -44,7 +44,8 @@ export default {
   name: 'List',
   created: function() {
       let that = this;
-      EventBus.$on('deliverSearchParam', function(params){
+      EventBus.$on('deliverSearchParam', function(params, typeName){
+          that.typeName = typeName;
           that.searchParam = params;
           that.getApprovalList();
       })
@@ -66,7 +67,8 @@ export default {
   data () {
     return {
         searchParam: {},
-        approvalList: []
+        approvalList: [],
+        typeName: ''
     }
   }
 }

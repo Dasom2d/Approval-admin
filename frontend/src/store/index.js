@@ -6,9 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     memberInfo: {
-      memberId: 2,
-      name: '튜브',
-      gradeId: 2
+      memberId: 3,
+      name: '네오',
+      gradeId: 3
     }
   },
   mutations: {

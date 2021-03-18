@@ -34,10 +34,13 @@
         <if test="registerMemberId != null">
             AND avl.register_member_id = #{registerMemberId}
         </if>
-        <if test="requestMemberId != null">
+        <if test="requestMemberId != null and approveMemberId != null">
+            AND (avl.approve_member_id = #{approveMemberId} OR avl.request_member_id = #{requestMemberId})
+        </if>
+        <if test="requestMemberId != null and approveMemberId == null">
             AND avl.request_member_id = #{requestMemberId}
         </if>
-        <if test="approveMemberId != null">
+        <if test="approveMemberId != null and requestMemberId == null">
             AND avl.approve_member_id = #{approveMemberId}
         </if>
         <if test="requestStatusCode != null">

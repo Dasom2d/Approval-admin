@@ -14,7 +14,7 @@
                                         {{approval.title}}</router-link></p>
                                 <span>
                                     <a>{{approval.requestMemberName}}</a>
-                                    <span>2021.03.16</span>
+                                    <span>{{approval.registerDate}}</span>
                                 </span>
                             </li>
                         </ul>
@@ -34,7 +34,8 @@ export default {
     name: 'Default',
     mounted: function() {
         let params = {
-            registerMemberId: this.$store.state.memberInfo.memberId
+              requestMemberId: this.loginedMemberInfo.memberId,
+              approveMemberId: this.loginedMemberInfo.memberId
         }
         axios.get('/api/approval/getApprovalList', {params: params})
             .then(res => {
@@ -51,6 +52,7 @@ export default {
     },
     data() {
       return {
+        loginedMemberInfo: this.$store.state.memberInfo,
         approvalList: []
       }
     }
