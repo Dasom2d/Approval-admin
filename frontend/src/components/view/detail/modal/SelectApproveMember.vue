@@ -1,28 +1,56 @@
 <template>
   <div class="content">
-    <h1>title</h1>
+    <h1>승인자 선택</h1>
     <div>
-      <h2>Content</h2>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde rem rerum
-      eveniet eligendi illo cupiditate assumenda accusantium, qui minus eius ut
-      dicta iusto neque itaque earum reiciendis similique officia! Culpa! Odio
-      vel tempora, laudantium at dolorem laborum? Exercitationem aliquam enim
-      ratione laboriosam, repellendus aperiam inventore, quibusdam quasi nam
-      beatae deserunt necessitatibus quam velit rem harum. Quisquam error
-      architecto accusantium ad. Tenetur sint commodi, quaerat quidem quia
-      aspernatur perferendis, possimus explicabo saepe accusantium mollitia
-      numquam minima voluptatum animi iusto omnis. Placeat suscipit sequi iste
-      voluptates ipsum distinctio! Quisquam autem mollitia minima!
+      <h2>승인자를 선택해주세요</h2>
+      <table>
+        <thead>
+          <th>사번</th>
+          <th>이름</th>
+          <th>직급</th>
+        </thead>
+        <tbody>
+          <tr v-for="(member, idx) in memberList" :key="idx">
+            <td>{{member.memberId}}</td>
+            <td>{{member.name}}</td>
+            <td>{{member.gradeName}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+              <button @click="$emit('close-modal')">
+                OK
+              </button>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: "SelectApproveMember",
   props: {
     msg: String,
   },
+  mounted() {
+    this.getMemberList();
+  },
+  methods: {
+    getMemberList() {
+      axios.get('/api/member/getAvailApproveMemberList?memberId=' + this.$store.state.memberInfo.memberId)
+              .then(res => {
+                  if(res.statusText === 'OK'){
+                    this.memberList = res.data;
+                  }
+              });
+    }
+  },
+    data() {
+      return {
+        memberList: []
+      }
+    }
 };
 </script>
 
