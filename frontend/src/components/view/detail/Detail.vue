@@ -5,7 +5,7 @@
       <ModalView v-if="showApproveModal" @close="showApproveModal = false">
         <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
       </ModalView>
-      <button @click="showApproveModal = true">승인자 선택</button>
+      <button v-if="isAvailEdit" @click="showApproveModal = true">승인자 선택</button>
       <ul>
         <li>{{approvalState}}</li>
       </ul>
@@ -59,9 +59,12 @@
     <div>
       <button @click="$router.push({path: '/main'})">목록으로</button>
       <button v-if="type==='register'" @click="registApproval()">등록하기</button>
-      <button v-if="type==='view' && requestStatusCode === 'WAIT'" @click="goEdit()">편집</button>
-      <button v-if="type==='view' && requestStatusCode === 'WAIT'" @click="deleteApproval()">삭제</button>
+      <button v-if="isAvailEdit" @click="goEdit()">편집</button>
+      <button v-if="isAvailEdit" @click="deleteApproval()">삭제</button>
       <button v-if="type==='edit'" @click="updateApproval()">저장</button>
+
+      <button v-if="isAvailUpdate" @click="processApproval('APPROVE')">승인</button>
+      <button v-if="isAvailUpdate" @click="processApproval('RETURN')">반려</button>
     </div>
   </div>
 
@@ -88,7 +91,6 @@ export default {
   mounted: function() {
     this.type = this.$route.name;
     if(this.type === 'view' || this.type === 'update'){
-      this.isAvailEdit = true;
       let approvalId = this.$route.params.id;
       this.getApproval(approvalId);
     } else if(this.type === 'register') {
@@ -133,6 +135,11 @@ export default {
                       this.content = res.data.body.content;
                       this.registerDate = res.data.body.registerDate;
                       this.approveDate = res.data.body.approveDate;
+
+                      this.isAvailEdit = this.type ==='view' && this.requestStatusCode === 'WAIT'
+                                            && this.loginedMemberInfo.memberId === res.data.body.requestMemberId;
+                      this.isAvailUpdate = this.type ==='view' && this.requestStatusCode === 'WAIT' 
+                                            && this.loginedMemberInfo.memberId === res.data.body.approveMemberId;
                   }
               });
       }, 
@@ -170,10 +177,10 @@ export default {
       if(this.content.length > 3000) {
         throw "내용은 3000자를 넘을 수 없습니다.";
       }
-      if(this.approveMemberInfo.gradeId == this.$store.state.memberInfo.gradeId) {
+      if(this.approveMemberInfo.gradeId == this.requestMemberInfo.gradeId) {
         throw "승인자는 요청자와 같은 직급일 수 없습니다.";
       }
-      if(this.approveMemberInfo.gradeId > this.$store.state.memberInfo.gradeId) {
+      if(this.approveMemberInfo.gradeId > this.requestMemberInfo.gradeId) {
         throw "승인자는 요청자보다 직급이 높아야합니다.";
       }
       return true;
@@ -197,27 +204,45 @@ export default {
         alert(e);
       }
     },
+    goUpdate(url, param) {
+      axios.put(url, param)
+            .then(response => {
+              if(response.data.code === 0) {
+                alert('수정하였습니다.');
+              }
+              window.location.href = '/view/'+this.approvalId;
+            })
+            .catch(err => {
+              if(!this.isNull(err.response.data)){
+                alert(err.response.data.message) 
+              } else {
+                alert(err.response.data.error);
+              }
+            });   
+    },
     updateApproval() {
       try {  
-        let updateParam = this.setParams();
-        updateParam.approvalId = this.approvalId;
-        updateParam.requestStatusCode = this.requestStatusCode;
-        updateParam.approvalStatusCode = this.approvalStatusCode;
-
-        axios.put('/api/approval', updateParam)
-          .then(response => {
-            if(response.data.code === 0) {
-              alert('기안을 수정하였습니다.');
-            }
-            window.location.href = '/view/'+this.approvalId;
-          })
-          .catch(err => {
-            if(!this.isNull(err.response.data)){
-              alert(err.response.data.message) 
-            } else {
-              alert(err.response.data.error);
-            }
-          });
+        if(this.validate()) {
+          let updateParam = this.setParams();
+          updateParam.approvalId = this.approvalId;
+          updateParam.requestStatusCode = this.requestStatusCode;
+          updateParam.approvalStatusCode = this.approvalStatusCode;
+          this.goUpdate('/api/approval/update', updateParam);
+        }
+      } catch(e){
+        alert(e);
+      }
+    },
+    processApproval(changedStatusCode) {
+      try {  
+        if(this.validate()) {
+          let processParam = {
+            approvalId: this.approvalId,
+            requestStatusCode: this.requestStatusCode,
+            approvalStatusCode: changedStatusCode
+          }
+          this.goUpdate('/api/approval/process', processParam);
+        }
       } catch(e){
         alert(e);
       }
@@ -225,11 +250,10 @@ export default {
     deleteApproval() {
       if(confirm('삭제하시겠습니까?')) {
         if(!this.isAvailEdit) {
-          alert('요청상태의 문서만 수정가능합니다.');
+          alert('요청상태의 문서만 수정 가능합니다.');
         } else {
             let deleteParam = {
               approvalId: this.approvalId,
-              requestStatusCode: this.requestStatusCode,
               approvalStatusCode: this.approvalStatusCode
             };
             axios.delete('/api/approval', {
@@ -249,8 +273,10 @@ export default {
     },
     data() {
       return {
-        type: 'register',
+        loginedMemberInfo: this.$store.state.memberInfo,
         isAvailEdit: false,
+        isAvailUpdate: false,
+        type: 'register',
         approveMemberInfo: {},
         requestMemberInfo: {},
         showApproveModal: false,

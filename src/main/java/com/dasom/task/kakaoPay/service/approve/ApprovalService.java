@@ -26,7 +26,6 @@ public class ApprovalService {
      * 기안 리스트 조회
      */
     public List<Approval> getApprovalList(Approval.Search search) {
-
         return approvalRepository.getApprovalList(search);
     }
 
@@ -47,9 +46,9 @@ public class ApprovalService {
         // 고쳐야함
         param.setRegisterMemberId(2);
 
-        approvalValidator.validate(param);
-        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
+        approvalValidator.register(param);
         approvalRepository.registerApproval(param);
+
         return param.getApprovalId();
     }
 
@@ -57,28 +56,32 @@ public class ApprovalService {
      * 기안 수정
      */
     public Integer updateApproval(Approval.Param param) {
+        approvalValidator.update(param);
 
-        approvalValidator.validate(param);
-        approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
-        approvalValidator.isValidUpdateDelete(param.getApprovalStatusCode(), param.getRequestStatusCode());
         approvalRepository.updateApproval(param);
+
         return param.getApprovalId();
     }
 
-//
-//    /**
-//     * 기안 승인, 반려
-//     */
-//    public void processApproval(Approval approval) {
-//        isValidRequestStatus(approval.getApproveStatusCode());
-//        approvalRepository.updateApproval(approval);
-//    }
+
+    /**
+     * 기안 승인, 반려
+     */
+    public Integer processApproval(Approval.Param param) {
+        approvalValidator.process(param);
+        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+
+        approvalRepository.processApproval(param);
+
+        return param.getApprovalId();
+    }
 
     /**
      * 기안 삭제
      */
     public Integer deleteApproval(Approval.Param param) {
-        approvalValidator.isValidUpdateDelete(param.getApprovalStatusCode(), param.getRequestStatusCode());
+        approvalValidator.delete(param);
+
         approvalRepository.deleteApproval(param);
         return param.getApprovalId();
     }

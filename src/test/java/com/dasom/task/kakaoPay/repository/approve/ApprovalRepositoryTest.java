@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.DateUtil.now;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,7 +74,6 @@ public class ApprovalRepositoryTest {
         param.setRequestMemberId(4);
         param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
         param.setRequestStatusCode(RequestStatusCode.WAIT);
-        param.setRegisterDate(now());
         param.setRegisterMemberId(4);
 
         // when
@@ -103,11 +101,28 @@ public class ApprovalRepositoryTest {
        search.setApprovalId(1);
        Approval result = approvalRepository.getApproval(search);
        assertThat(result.getContent()).isEqualTo(param.getContent());
-
    }
 
+    @Test
+    public void 승인테스트 () {
+        // given
+        Approval.Param param = new Approval.Param();
+        param.setApprovalId(1);
+        param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
+        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+
+        // when
+        approvalRepository.processApproval(param);
+
+        // then
+        Approval.Search search = new Approval.Search();
+        search.setApprovalId(1);
+        ApprovalStatusCode result = approvalRepository.getApproval(search).getApprovalStatusCode();
+        assertThat(result).isEqualTo(param.getApprovalStatusCode());
+    }
+
    @Test
-    public void deleteApproval() {
+    public void 삭제테스트() {
         // given
        Approval.Param param = new Approval.Param();
        param.setApprovalId(1);

@@ -49,7 +49,6 @@
         <if test="approvalStatusCode != null">
             AND avl.approval_status_code = #{approvalStatusCode}
         </if>
-
     </select>
 
 
@@ -67,25 +66,27 @@
 
     <update id="updateApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
         update approval
-        set
-            modify_date = now()
+        set modify_date = now()
         <if test="title != null">
             ,title = #{title}
         </if>
         <if test="content != null">
             ,content = #{content}
         </if>
+        <if test="approveMemberId != null">
+            ,approve_member_id = #{approveMemberId}
+        </if>
+        where approval_id = #{approvalId}
+    </update>
+
+    <update id="processApproval"  parameterType="com.dasom.task.kakaoPay.model.approval.Approval$Param">
+        update approval
+        set approve_date = now()
         <if test="approvalStatusCode != null">
             ,approval_status_code = #{approvalStatusCode}
         </if>
         <if test="requestStatusCode != null">
             ,request_status_code = #{requestStatusCode}
-        </if>
-        <if test="approveMemberId != null">
-            ,approve_member_id = #{approveMemberId}
-        </if>
-        <if test="approveDate != null">
-            ,approve_date = #{approveDate}
         </if>
         where approval_id = #{approvalId}
     </update>

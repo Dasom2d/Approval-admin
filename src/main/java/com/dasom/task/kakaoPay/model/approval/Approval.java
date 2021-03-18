@@ -40,8 +40,6 @@ public class Approval {
         private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
         private Integer registerMemberId;
-        private Date registerDate;
-        private Date approveDate;
     }
 
 

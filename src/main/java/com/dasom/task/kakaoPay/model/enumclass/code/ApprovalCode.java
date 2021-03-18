@@ -11,6 +11,7 @@ public enum ApprovalCode {
     REGISTER_SUCCESS("approval.register.success", 0),
     UPDATE_SUCCESS("approval.register.update", 0),
     APPROVE_SUCCESS("approval.register.approve", 0),
+    PROCESS_SUCCESS("approval.register.process", 0),
     DELETE_SUCCESS("approval.register.delete", 0),
 
     INVALID_ADD_PARAM("approval.invalid.add.param", -1000),
@@ -18,7 +19,7 @@ public enum ApprovalCode {
 
     INAPPOSITE_APPROVE_MEMBER("approval.inapposite.approve.member", -2000),
 
-    INAPPOSITE_APPROVAL_STATUS("approval.approval.status", -3000);
+    INAPPOSITE_STATUS("approval.status", -3000);
 
 
     private final String messageCode;

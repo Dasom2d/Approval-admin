@@ -75,7 +75,7 @@ public class ApprovalController {
      * @return ResponseEntity
      */
 
-    @PutMapping
+    @PutMapping("/update")
     @ResponseBody
     public ResponseEntity updateApproval(@RequestBody Approval.Param param) {
         Integer approvalId = approvalService.updateApproval(param);
@@ -83,6 +83,23 @@ public class ApprovalController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.UPDATE_SUCCESS.getMessageCode(),
                         ApprovalCode.UPDATE_SUCCESS.getCode(),
+                        Boolean.TRUE, approvalId));
+    }
+
+    /**
+     * 기안 승인, 반려
+     * @param param
+     * @return ResponseEntity
+     */
+
+    @PutMapping("/process")
+    @ResponseBody
+    public ResponseEntity processApproval(@RequestBody Approval.Param param) {
+        Integer approvalId = approvalService.processApproval(param);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApprovalResponse.of(ApprovalCode.PROCESS_SUCCESS.getMessageCode(),
+                        ApprovalCode.PROCESS_SUCCESS.getCode(),
                         Boolean.TRUE, approvalId));
     }
 

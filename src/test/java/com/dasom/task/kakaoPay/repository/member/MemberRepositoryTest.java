@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Transactional
-public class memberRepositoryTest {
+public class MemberRepositoryTest {
 
     MemberRepository memberRepository;
     @Autowired

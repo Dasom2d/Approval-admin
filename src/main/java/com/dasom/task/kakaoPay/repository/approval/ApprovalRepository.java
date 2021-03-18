@@ -33,6 +33,10 @@ public class ApprovalRepository {
         return sqlSessionTemplate.insert(PREFIX + "updateApproval", param);
     }
 
+    public Integer processApproval(Approval.Param param) {
+        return sqlSessionTemplate.insert(PREFIX + "processApproval", param);
+    }
+
     public Integer deleteApproval(Approval.Param param) {
         return sqlSessionTemplate.delete(PREFIX + "deleteApproval", param);
     }

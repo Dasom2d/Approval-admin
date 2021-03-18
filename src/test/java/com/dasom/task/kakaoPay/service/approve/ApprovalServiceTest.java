@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.DateUtil.now;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -52,7 +51,6 @@ public class ApprovalServiceTest {
         param.setRequestMemberGradeId(4);
         param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
         param.setRequestStatusCode(RequestStatusCode.WAIT);
-        param.setRegisterDate(now());
         param.setRegisterMemberId(4);
         return param;
     }
@@ -123,6 +121,23 @@ public class ApprovalServiceTest {
     }
 
     @Test
+    public void 기안승인 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setApprovalId(1);
+        param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
+
+        // when
+        Integer approvalId = approvalService.processApproval(param);
+
+        // then
+        Approval.Search search = new Approval.Search();
+        search.setApprovalId(approvalId);
+        ApprovalStatusCode result = approvalService.getApproval(search).getApprovalStatusCode();
+        assertThat(result).isEqualTo(param.getApprovalStatusCode());
+    }
+
+    @Test
     public void 기안삭제 () {
         // given
         Approval.Param param = setupApproval();
@@ -173,7 +188,6 @@ public class ApprovalServiceTest {
         // given
         Approval.Param param = setupApproval();
         param.setApprovalId(1);
-        param.setContent("테스트 내용 수정합니다.");
         param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
 
@@ -182,7 +196,38 @@ public class ApprovalServiceTest {
                 () -> approvalService.updateApproval(param));
 
         // then
-        assertThat(e.getMessage()).isEqualTo("요청 상태의 문서만 수정 혹은 삭제 가능합니다.");
+        assertThat(e.getMessage()).isEqualTo("승인 대기 상태의 문서만 수정 가능합니다.");
+    }
+
+    @Test
+    public void 요청상태예외_삭제 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setApprovalId(1);
+        param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
+        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.deleteApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("승인 대기 상태의 문서만 삭제 가능합니다.");
+    }
+
+    @Test
+    public void 승인상태예외 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setApprovalId(1);
+        param.setRequestStatusCode(RequestStatusCode.COMPLETE);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.processApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("요청 상태의 문서만 승인 혹은 반려 가능합니다.");
     }
 
 }
