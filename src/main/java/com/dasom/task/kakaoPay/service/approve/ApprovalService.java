@@ -47,6 +47,7 @@ public class ApprovalService {
         // 고쳐야함
         param.setRegisterMemberId(2);
 
+        approvalValidator.validate(param);
         approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
         approvalRepository.registerApproval(param);
         return param.getApprovalId();
@@ -56,6 +57,8 @@ public class ApprovalService {
      * 기안 수정
      */
     public Integer updateApproval(Approval.Param param) {
+
+        approvalValidator.validate(param);
         approvalValidator.isValidApproveGrade(param.getApproveMemberGradeId(), param.getRequestMemberGradeId());
         approvalValidator.isValidUpdateDelete(param.getApprovalStatusCode(), param.getRequestStatusCode());
         approvalRepository.updateApproval(param);

@@ -1,5 +1,7 @@
 package com.dasom.task.kakaoPay.controller.approval;
 
+import com.dasom.task.kakaoPay.exception.ApprovalBadRequestException;
+import com.dasom.task.kakaoPay.exception.ApprovalException;
 import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.approval.ApprovalResponse;
 import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
@@ -27,11 +29,11 @@ public class ApprovalController {
 
     @GetMapping("/getApproval")
     public ResponseEntity<ApprovalResponse<Approval>> getApproval(Approval.Search search) {
-        Approval approvalDocument = approvalService.getApproval(search);
+        Approval approval = approvalService.getApproval(search);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.FIND_SUCCESS.getMessageCode(),
                         ApprovalCode.FIND_SUCCESS.getCode(),
-                        approvalDocument));
+                        approval));
     }
 
     /**
@@ -59,12 +61,12 @@ public class ApprovalController {
     @PostMapping
     @ResponseBody
     public ResponseEntity registerApproval(@RequestBody Approval.Param param) {
-        approvalService.registerApproval(param);
+        Integer approvalId = approvalService.registerApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
                         ApprovalCode.REGISTER_SUCCESS.getCode(),
-                        Boolean.TRUE));
+                        Boolean.TRUE, approvalId));
     }
 
     /**
@@ -76,12 +78,12 @@ public class ApprovalController {
     @PutMapping
     @ResponseBody
     public ResponseEntity updateApproval(@RequestBody Approval.Param param) {
-        approvalService.updateApproval(param);
+        Integer approvalId = approvalService.updateApproval(param);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.UPDATE_SUCCESS.getMessageCode(),
                         ApprovalCode.UPDATE_SUCCESS.getCode(),
-                        Boolean.TRUE));
+                        Boolean.TRUE, approvalId));
     }
 
     /**
@@ -95,10 +97,34 @@ public class ApprovalController {
     public ResponseEntity deleteApproval(@RequestBody Approval.Param param) {
         approvalService.deleteApproval(param);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.DELETE_SUCCESS.getMessageCode(),
                         ApprovalCode.DELETE_SUCCESS.getCode(),
                         Boolean.TRUE));
     }
 
+    /**
+     * ApprovalException 핸들러
+     * @param e
+     * @return ResponseEntity
+     */
+    @ExceptionHandler(ApprovalException.class)
+    @ResponseBody
+    public ResponseEntity<ApprovalResponse<Boolean>> approvalServerException(ApprovalException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApprovalResponse.of(e.getMessage(), e.getCode(), Boolean.FALSE));
+    }
+
+    /**
+     * ApprovalBadRequestException 핸들러
+     * @param e
+     * @return ResponseEntity
+     */
+
+    @ExceptionHandler(ApprovalBadRequestException.class)
+    @ResponseBody
+    public ResponseEntity<ApprovalResponse<Boolean>> approvalBadRequestException(ApprovalBadRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApprovalResponse.of(e.getMessage(), e.getCode(), Boolean.FALSE));
+    }
 }

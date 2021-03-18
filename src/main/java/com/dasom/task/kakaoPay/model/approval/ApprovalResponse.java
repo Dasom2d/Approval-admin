@@ -1,12 +1,20 @@
 package com.dasom.task.kakaoPay.model.approval;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.beans.ConstructorProperties;
 
+@Getter
+@Setter
+@ToString
 public class ApprovalResponse<T> {
     private String message;
     private int code;
     private T body;
+    private int approvalId;
 
     public String getMessage() {
         return this.message;
@@ -36,11 +44,23 @@ public class ApprovalResponse<T> {
         return "ApprovalResponse(message=" + this.getMessage() + ", code=" + this.getCode() + ", body=" + this.getBody() + ")";
     }
 
-    @ConstructorProperties({"message", "code", "body"})
+    @ConstructorProperties({"message", "code", "body", "approvalId"})
+    private ApprovalResponse(String message, int code, T body, int approvalId) {
+        this.message = message;
+        this.code = code;
+        this.body = body;
+        this.approvalId = approvalId;
+    }
+
+    @ConstructorProperties({"message", "code", "body", "approvalId"})
     private ApprovalResponse(String message, int code, T body) {
         this.message = message;
         this.code = code;
         this.body = body;
+    }
+
+    public static <T> ApprovalResponse<T> of(String message, int code, T body, int approvalId) {
+        return new ApprovalResponse(message, code, body, approvalId);
     }
 
     public static <T> ApprovalResponse<T> of(String message, int code, T body) {

@@ -16,6 +16,10 @@ public class Approval {
     private String content;
     private String approveMemberName;
     private String requestMemberName;
+    private Integer approveMemberId;
+    private Integer requestMemberId;
+    private Integer approveMemberGradeId;
+    private Integer requestMemberGradeId;
     private ApprovalStatusCode approvalStatusCode;
     private RequestStatusCode requestStatusCode;
     private Date approveDate;

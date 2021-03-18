@@ -12,8 +12,7 @@
         <tbody>
           <tr v-for="(member, idx) in memberList" :key="idx">
             <td>{{member.memberId}}</td>
-            <!-- <td><a @click="$emit('test123', member)">{{member.name}}</a></td> -->
-            <td><a @click="deliverMember(member)">{{member.name}}</a></td>
+            <td><a @click="deliverMemberInfo(member)">{{member.name}}</a></td>
             <td>{{member.gradeName}}</td>
           </tr>
         </tbody>
@@ -30,7 +29,6 @@ import axios from 'axios'
 export default {
   name: "SelectApproveMember",
   props: {
-    msg: String,
   },
   mounted() {
     this.getMemberList();
@@ -44,18 +42,17 @@ export default {
                   }
               });
     },
-    deliverMember(member) {
-      this.$emit('approveMember', member);
+    deliverMemberInfo(member) {
+      this.approveMember = member;
+      this.$emit('approveMember', member, false);
+
     }
   },
     data() {
       return {
+        approveMember: {},
         memberList: []
       }
     }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

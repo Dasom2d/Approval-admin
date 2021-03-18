@@ -16,37 +16,37 @@ public class ApprovalValidator {
     public void validate(Approval.Param param){
         if(StringUtils.isNullOrEmpty(param.getTitle())) {
             log.error("title is empty");
-            new ApprovalBadRequestException("제목을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("제목을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
         if(StringUtils.isNullOrEmpty(param.getContent())) {
             log.error("content is empty");
-            new ApprovalBadRequestException("내을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("내용을 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
         if(param.getRequestMemberId() == null) {
             log.error("request member id is empty");
-            new ApprovalBadRequestException("요청자가 존재하지 않습니다.", ApprovalCode.INVALID_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("요청자가 존재하지 않습니다.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
         if(param.getApproveMemberId() == null) {
             log.error("approve member id is empty");
-            new ApprovalBadRequestException("승인자를 입력해주세요.", ApprovalCode.INVALID_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("승인자가 지정되지 않았습니다.", ApprovalCode.INVALID_ADD_PARAM.getCode());
         }
         if(isValidTitleLength(param.getTitle())) {
             log.error("title length is too long.");
-            new ApprovalBadRequestException("제목의 길이는 45자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("제목의 길이는 45자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
         }
         if(isValidContentLength(param.getContent())) {
             log.error("title length is too long.");
-            new ApprovalBadRequestException("내용은 3000자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
+            throw new ApprovalBadRequestException("내용은 3000자를 넘을 수 없습니다.", ApprovalCode.INAPPOSITE_ADD_PARAM.getCode());
         }
 
     }
 
     private boolean isValidTitleLength(String title) {
-        return title.length() <= 45;
+        return title.length() >= 45;
     }
 
     private boolean isValidContentLength(String content) {
-        return content.length() <= 3000;
+        return content.length() >= 3000;
     }
 
 

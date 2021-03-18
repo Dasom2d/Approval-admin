@@ -2,11 +2,10 @@
   <div >
       기안신청서
     <div>
-      <ModalView v-if="isModalViewed" @close="isModalViewed = false">
-        <!-- <SelectApproveMember ></SelectApproveMember> -->
+      <ModalView v-if="showApproveModal" @close="showApproveModal = false">
         <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
       </ModalView>
-      <button @click="isModalViewed = true">승인자 선택</button>
+      <button @click="showApproveModal = true">승인자 선택</button>
       <ul>
         <li>{{approvalState}}</li>
       </ul>
@@ -16,7 +15,7 @@
             <span>요청자</span>
           </div>
           <div class='name'> 
-            <span title='요청자'> {{requestMemberName}}</span>
+            <span title='요청자'>{{requestMemberInfo.name}}</span>
           </div>
           <div class='date'> 
             <span title='요청일자'> {{registerDate}}</span>
@@ -27,10 +26,10 @@
             <span>승인자</span>
           </div>
           <div class='name'> 
-            <span title='요청자'> {{approveMemberName}}</span>
+            <span title='승인자'>{{approveMemberInfo.name}}</span>
           </div>
           <div class='date'> 
-            <span title='요청일자'> {{approveDate}}</span>
+            <span title='승인일자'> {{approveDate}}</span>
           </div>
         </li>
       </ul>
@@ -75,9 +74,9 @@ import SelectApproveMember from '@/components/view/detail/modal/SelectApproveMem
 import ModalView from '@/components/view/common/ModalView'
 
 const REQUEST_STATUS_CODE = {
-  REQUEST: '요청중',
-  APPROVE: '승인',
-  RETURN: '반려'
+  REQUEST: '요청문서',
+  APPROVE: '승인문서',
+  RETURN: '반려문서'
 }
 
 export default {
@@ -89,14 +88,24 @@ export default {
   mounted: function() {
     this.type = this.$route.name;
     if(this.type === 'view' || this.type === 'update'){
+      this.isAvailEdit = true;
       let approvalId = this.$route.params.id;
       this.getApproval(approvalId);
+    } else if(this.type === 'register') {
+      this.requestMemberInfo = this.$$store.state.memberInfo;
     }
   },
   methods: {
     goEdit() {
       this.type = 'edit';
     },
+    isNull: function (s) {
+		if (s == "" || s == null || s == undefined || (s != null && typeof s == "object" && !Object.keys(s).length)) {
+			return true;
+		} else {
+			return false;
+		}
+	},
     getApproval(id) {
       let params = {
             approvalId: id
@@ -107,8 +116,16 @@ export default {
                       console.log(res.data.body);
                       
                       this.approvalId = res.data.body.approvalId;
-                      this.requestMemberName = res.data.body.requestMemberName;
-                      this.approveMemberName = res.data.body.approveMemberName;
+                      this.approveMemberInfo = {
+                        memberId: res.data.body.approveMemberId,
+                        name: res.data.body.approveMemberName,
+                        gradeId: res.data.body.approveMemberGradeId
+                      }
+                      this.requestMemberInfo = {
+                        memberId: res.data.body.requestMemberId,
+                        name: res.data.body.requestMemberName,
+                        gradeId: res.data.body.requestMemberGradeId
+                      }
                       this.requestStatusCode = res.data.body.requestStatusCode;
                       this.approvalStatusCode = res.data.body.approvalStatusCode;
                       this.approvalState = REQUEST_STATUS_CODE[res.data.body.approvalStatusCode];
@@ -119,28 +136,69 @@ export default {
                   }
               });
       }, 
-      approveMember(member) {
+      approveMember(member, showApproveModal) {
         this.approveMemberInfo = member;
+        this.showApproveModal = showApproveModal;
       },
       setParams() {
         let params = {
           title: this.title,
           content: this.content,
           approveMemberId: this.approveMemberInfo.memberId,
-          requestMemberId: this.$store.state.memberInfo.memberId, 
+          requestMemberId: this.requestMemberInfo.memberId, 
           approveMemberGradeId: this.approveMemberInfo.gradeId,
-          requestMemberGradeId:this.$store.state.memberInfo.gradeId,
+          requestMemberGradeId: this.requestMemberInfo.gradeId,
         }
         return params;
       },
+    validate() {
+      if(this.isAvailEdit && this.requestStatusCode === 'WAIT') {
+        throw "요청상태의 문서만 수정가능합니다."
+      }
+      if(this.isNull(this.title)) {
+        throw "제목을 입력해주세요."
+      }
+      if(this.title.length > 45) {
+        throw "제목의 길이는 45자를 넘을 수 없습니다."
+      }
+      if(this.isNull(this.content)) {
+        throw "내용을 입력해주세요."
+      }
+      if(this.isNull(this.approveMemberInfo)) {
+        throw "승인자가 지정되지 않았습니다."
+      } 
+      if(this.content.length > 3000) {
+        throw "내용은 3000자를 넘을 수 없습니다.";
+      }
+      if(this.approveMemberInfo.gradeId == this.$store.state.memberInfo.gradeId) {
+        throw "승인자는 요청자와 같은 직급일 수 없습니다.";
+      }
+      if(this.approveMemberInfo.gradeId > this.$store.state.memberInfo.gradeId) {
+        throw "승인자는 요청자보다 직급이 높아야합니다.";
+      }
+      return true;
+    },
     registApproval() {
-      let registerParam = this.setParams();
-      axios.post('/api/approval', registerParam)
+      try {
+        if(this.validate()) {
+        let registerParam = this.setParams();
+        axios.post('/api/approval', registerParam)
         .then(response => {
-          console.log(response);
-      })
+            if(response.data.code === 0) {
+              alert('기안을 상신하였습니다.');
+              window.location.href = '/view/'+response.data.approvalId;
+            }
+          })
+          .catch(err => {
+            console.log(err.response.data);
+          });
+        }
+      } catch(e){
+        alert(e);
+      }
     },
     updateApproval() {
+      try {  
         let updateParam = this.setParams();
         updateParam.approvalId = this.approvalId;
         updateParam.requestStatusCode = this.requestStatusCode;
@@ -148,30 +206,54 @@ export default {
 
         axios.put('/api/approval', updateParam)
           .then(response => {
-            console.log(response);
+            if(response.data.code === 0) {
+              alert('기안을 수정하였습니다.');
+            }
+            window.location.href = '/view/'+this.approvalId;
           })
+          .catch(err => {
+            if(!this.isNull(err.response.data)){
+              alert(err.response.data.message) 
+            } else {
+              alert(err.response.data.error);
+            }
+          });
+      } catch(e){
+        alert(e);
+      }
     },
     deleteApproval() {
-      let deleteParam = {
-        approvalId: this.approvalId,
-        requestStatusCode: this.requestStatusCode,
-        approvalStatusCode: this.approvalStatusCode
-      };
-        axios.delete('/api/approval', {
-          data: deleteParam
-        })
-          .then(response => {
-            console.log(response);
-          })
-    }
+      if(confirm('삭제하시겠습니까?')) {
+        if(!this.isAvailEdit) {
+          alert('요청상태의 문서만 수정가능합니다.');
+        } else {
+            let deleteParam = {
+              approvalId: this.approvalId,
+              requestStatusCode: this.requestStatusCode,
+              approvalStatusCode: this.approvalStatusCode
+            };
+            axios.delete('/api/approval', {
+              data: deleteParam})
+              .then(response => {
+                if(response.data.code === 0) {
+                  alert('기안을 삭제하였습니다.');
+                }
+                window.location.href = '/main';
+            })
+              .catch(err => {
+                alert(err.response.data.message);
+            });
+          }
+        }
+      }
     },
     data() {
       return {
-        approveMemberInfo: {},
-        isModalViewed: false,
-        requestMemberName: '',
-        approveMemberName: '',
         type: 'register',
+        isAvailEdit: false,
+        approveMemberInfo: {},
+        requestMemberInfo: {},
+        showApproveModal: false,
         approvalId: '',
         requestStatusCode: '',
         approvalState: '',
