@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -21,13 +20,14 @@ public class UserService implements UserDetailsService {
     @Autowired
     private MemberService memberService;
 
-    @Transactional
+
     public void joinUser(User user) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
 
         Integer userId = userRepository.joinUser(user);
         addMember(userId);
+
     }
 
     private void addMember(int userId) {
@@ -52,6 +52,12 @@ public class UserService implements UserDetailsService {
             log.debug("계정정보없음");
             throw new UsernameNotFoundException(username);
         }
+
+//        return User.builder()
+//                .userNo(user.getUserNo())
+//                .userName(user.getUsername())
+//                .memberId(user.getMemberId())
+//                .build();
         return user;
     }
 }

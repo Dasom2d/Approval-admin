@@ -5,7 +5,7 @@
 
     <select id="findById" parameterType="java.lang.String"
             resultType="com.dasom.task.kakaoPay.model.user.User">
-        SELECT user_no, id, user_name, member_id
+        SELECT *
         FROM user
         where id = #{id};
     </select>

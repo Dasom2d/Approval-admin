@@ -2,22 +2,23 @@
 <template>
   <div>
       <h2>Log In</h2>
-      <form @submit="onSubmit">
+      <form @submit.prevent="goSubmit">
           <input placeholder="Enter your ID" v-model="uid">
           <input placeholder="Enter your password" v-model="password">
           <button type="submit">Login</button>
+      </form>
+
+      <form>
       </form>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import axios from 'axios'
+
 export default {
   name: 'Login',
-  data: () => ({
-    uid: '',
-    password: ''
-  }),
   methods: {
     ...mapActions(['login']),
     async onSubmit () {
@@ -27,8 +28,19 @@ export default {
       } catch (err) {
         console.error(err)
       }
+    },
+    goSubmit() {
+          let form = new FormData();
+          form.append('username', this.uid);
+          form.append('password', this.password);
+
+          return axios.post('/loginProcess', form);
     }
-  }
+  },
+  data: () => ({
+    uid: '',
+    password: ''
+  }),
 }
 </script>
 
