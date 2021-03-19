@@ -1,17 +1,37 @@
+// src/components/Login.vue
 <template>
-  <div >
-      로그인이다 쫘식아
-    <login-box></login-box>
+  <div>
+      <h2>Log In</h2>
+      <form @submit="onSubmit">
+          <input placeholder="Enter your ID" v-model="uid">
+          <input placeholder="Enter your password" v-model="password">
+          <button type="submit">Login</button>
+      </form>
   </div>
 </template>
 
 <script>
-import LoginBox from '@/components/login/LoginBox'
-
+import { mapActions } from 'vuex'
 export default {
-  name: 'App',
-  components: {
-    'LoginBox': LoginBox
+  name: 'Login',
+  data: () => ({
+    uid: '',
+    password: ''
+  }),
+  methods: {
+    ...mapActions(['login']),
+    async onSubmit () {
+      try {
+        let loginResult = await this.login({uid: this.uid, password: this.password})
+        console.log(loginResult) // 로그인 성공하면 true, 아니면 false
+      } catch (err) {
+        console.error(err)
+      }
+    }
   }
 }
 </script>
+
+<style>
+
+</style>

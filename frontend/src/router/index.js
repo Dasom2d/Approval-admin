@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import LoginPage from '@/components/login/Login'
+import LoginSuccess from '@/components/login/LoginSuccess'
 import MainPage from '@/components/view/main/Main'
 import DetailPage from '@/components/view/detail/Detail'
 
@@ -11,8 +12,12 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/login',
       component: LoginPage
+    },
+    {
+      path: '/loginSucess',
+      component: LoginSuccess
     },
     {
       path: '/main',
