@@ -6,13 +6,13 @@
         <div class="nav_lst">
             <h3 @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'WAIT')">{{APPROVAL_TYPE.WAIT}} </h3>
             <ul>
-                <li @click="setSearchParam('WAIT', null, null, loginMemberId, 'WAIT_APPROVE')">{{APPROVAL_TYPE.WAIT_APPROVE}}</li>
-                <li @click="setSearchParam('WAIT', null, loginMemberId, null, 'WAIT_REQUEST')">{{APPROVAL_TYPE.WAIT_REQUEST}}</li>
+                <li @click="setSearchParam('WAIT', null, null, loginedMemberInfo.memberId, 'WAIT_APPROVE')">{{APPROVAL_TYPE.WAIT_APPROVE}}</li>
+                <li @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, null, 'WAIT_REQUEST')">{{APPROVAL_TYPE.WAIT_REQUEST}}</li>
             </ul>
-            <h3 @click="setSearchParam('COMPLETE', null, loginMemberId, loginMemberId, 'COMPLETE')">{{APPROVAL_TYPE.COMPLETE}}</h3>
+            <h3 @click="setSearchParam('COMPLETE', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE')">{{APPROVAL_TYPE.COMPLETE}}</h3>
             <ul>
-                <li @click="setSearchParam('COMPLETE', 'APPROVE', loginMemberId, null, 'COMPLETE_APPROVE')">{{APPROVAL_TYPE.COMPLETE_APPROVE}}</li>
-                <li @click="setSearchParam('COMPLETE', 'RETURN', loginMemberId, null, 'COMPLETE_RETURN')">{{APPROVAL_TYPE.COMPLETE_RETURN}}</li>
+                <li @click="setSearchParam('COMPLETE', 'APPROVE', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_APPROVE')">{{APPROVAL_TYPE.COMPLETE_APPROVE}}</li>
+                <li @click="setSearchParam('COMPLETE', 'RETURN', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_RETURN')">{{APPROVAL_TYPE.COMPLETE_RETURN}}</li>
             </ul>
         </div>
     </div>
@@ -35,6 +35,7 @@ export default {
               approveMemberId: approveMemberId
           }
           EventBus.$emit('deliverSearchParam', param, typeName);
+          EventBus.$emit('changeContentState', false)
       }
   },
   data() {

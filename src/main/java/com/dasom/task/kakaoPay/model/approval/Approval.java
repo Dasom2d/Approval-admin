@@ -2,9 +2,10 @@ package com.dasom.task.kakaoPay.model.approval;
 
 import com.dasom.task.kakaoPay.model.enumclass.ApprovalStatusCode;
 import com.dasom.task.kakaoPay.model.enumclass.RequestStatusCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -22,9 +23,12 @@ public class Approval {
     private Integer requestMemberGradeId;
     private ApprovalStatusCode approvalStatusCode;
     private RequestStatusCode requestStatusCode;
-    private Date approveDate;
-    private Date registerDate;
-    private Date modifyDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime approveDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime registerDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime modifyDate;
     private Integer registerMemberId;
 
     @Getter

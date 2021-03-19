@@ -23,7 +23,7 @@
                                 {{approval.title}}</router-link></td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
-                            <td>{{approval.approvalType}}</td>
+                            <td>{{approval.requestApprovalType}}</td>
                             <td>{{approval.registerDate}}</td>
                             <td>{{approval.approveDate}}</td>
                         </tr>
@@ -40,14 +40,19 @@
 import EventBus from '@/js/eventBus'
 import axios from 'axios'
 
+const REQUEST_APPROVAL_CODE = {
+    REQUEST_WAIT: '요청중 문서',
+    APPROVE_COMPLETE: '승인 완료',
+    RETURN_COMPLETE: '반려 완료'
+}
+
 export default {
   name: 'List',
   created: function() {
-      let that = this;
-      EventBus.$on('deliverSearchParam', function(params, typeName){
-          that.typeName = typeName;
-          that.searchParam = params;
-          that.getApprovalList();
+      EventBus.$on('deliverSearchParam', (params, typeName) => {
+          this.typeName = typeName;
+          this.searchParam = params;
+          this.getApprovalList();
       })
   },
     methods: {
@@ -56,8 +61,7 @@ export default {
                 .then(res => {
                     if(res.data.code === 0) {
                         res.data.body.forEach(approval => {
-                            approval.requestStatusCode === 'COMPLETE' ? 
-                            approval.approvalType = '완료문서' : approval.approvalType  = '대기문서';
+                            approval.requestApprovalType = REQUEST_APPROVAL_CODE[approval.approvalStatusCode+'_'+approval.requestStatusCode];
                         })
                     this.approvalList = res.data.body;
                     }
