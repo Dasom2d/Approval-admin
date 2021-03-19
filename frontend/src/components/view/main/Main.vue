@@ -1,7 +1,7 @@
 <template>
   <div id='container'>
     <div>{{this.$store.state.memberInfo.name}} 님의 문서</div>
-      <button @click="$router.push({path: '/'})">로그아웃</button>
+      <button @click="logout">로그아웃</button>
       <SubNav></SubNav>
       <Contents></Contents>
   </div>
@@ -17,6 +17,12 @@ export default {
   components: {
     'SubNav': SubNav,
     'Contents': Contents
+  },
+  methods: {
+    logout() {
+      this.$store.state.memberInfo = {};
+      this.$router.push({path: '/'});
+    }
   },
   data() {
     return {

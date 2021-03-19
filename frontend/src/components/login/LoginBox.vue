@@ -1,19 +1,23 @@
 <template>
   <div id="loginBox">
-    <div>
+    <div style="border: 1px solid black;">
       ㅎㅏ이 
-      {{this.$store.state.memberInfo.name}}
-      <router-link to='/main'>메인 이동</router-link> 
+      <div @click='login($attrs.account)'>{{this.$attrs.account.name}} 로그인</div>
     </div>
   </div>
 </template>
 
 
 <script>
-
 export default {
   name: 'LoginBox',
   components: {
   },
+  methods: {
+    login(account) {
+      this.$store.state.memberInfo = account;
+      this.$router.push({path: '/main'})
+    }
+  }
 }
 </script>
