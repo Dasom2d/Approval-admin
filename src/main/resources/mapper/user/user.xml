@@ -3,10 +3,9 @@
 
 <mapper namespace="com.dasom.task.kakaoPay.repository.user.UserRepository">
 
-    <select id="getApproval" parameterType="java.lang.Integer"
+    <select id="findById" parameterType="java.lang.String"
             resultType="com.dasom.task.kakaoPay.model.user.User">
-
-        SELECT userId, id, userName, memberId
+        SELECT user_no, id, user_name, member_id
         FROM user
         where id = #{id};
     </select>

@@ -25,4 +25,8 @@ public class MemberRepository {
         return sqlSessionTemplate.selectList(PREFIX + "getMemberList", memberId);
     }
 
+    public Integer addMember(Member member) {
+        return sqlSessionTemplate.insert(PREFIX + "addMember", member);
+    }
+
 }

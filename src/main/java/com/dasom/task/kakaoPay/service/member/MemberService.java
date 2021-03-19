@@ -22,4 +22,7 @@ public class MemberService {
     public List<Member> getMemberList(Integer memberId) {
         return memberRepository.getMemberList(memberId);
     }
+    public void addMember(Member member) {
+        memberRepository.addMember(member);
+    }
 }

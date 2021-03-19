@@ -1,12 +1,12 @@
 import axios from 'axios'
 
+
 const getUserInfo = (uid, password) => {
-  return axios.get('/loginProcess', {
-    params: {
-      'id': uid,
-      'password': password
-    }
-  })
+  let form = new FormData();
+  form.append('username', uid);
+  form.append('password', password);
+
+  return axios.post('/loginProcess', form);
 }
 
 const isFinished = uid => {

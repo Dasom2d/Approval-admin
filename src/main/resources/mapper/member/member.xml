@@ -19,5 +19,11 @@
         where mbr.member_id &lt; #{memberId};
     </select>
 
+    <select id="addMember" parameterType="com.dasom.task.kakaoPay.model.member.Member"
+            resultType="java.lang.Integer">
+        insert into member
+        set(#{memberId}, #{name}, #{gradeId})
+    </select>
+
 </mapper>
 

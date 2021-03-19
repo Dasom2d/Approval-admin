@@ -1,8 +1,6 @@
 package com.dasom.task.kakaoPay.model.user;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +11,9 @@ import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class User implements UserDetails {
-    private Integer userId;
+    private Integer userNo;
     private String id;
     private String password;
     private String userName;
