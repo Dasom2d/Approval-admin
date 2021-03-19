@@ -154,6 +154,76 @@ public class ApprovalServiceTest {
     }
 
     @Test
+    public void 상신예외_제목없음 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setTitle(null);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("제목을 입력해주세요.");
+    }
+
+    @Test
+    public void 상신예외_내용없음 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setContent(null);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("내용을 입력해주세요.");
+    }
+
+    @Test
+    public void 상신예외_요청자지정안됨 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setRequestMemberId(null);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("요청자가 존재하지 않습니다.");
+    }
+
+    @Test
+    public void 상신예외_승인자지정안됨 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setApproveMemberId(null);
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("승인자가 지정되지 않았습니다.");
+    }
+
+    @Test
+    public void 상신예외_제목길이 () {
+        // given
+        Approval.Param param = setupApproval();
+        param.setTitle("제목길이를45자이상으로합니다.제목길이를45자이상으로합니다.제목길이를45자이상으로합니다.");
+
+        // when
+        ApprovalBadRequestException e = assertThrows(ApprovalBadRequestException.class,
+                () -> approvalService.registerApproval(param));
+
+        // then
+        assertThat(e.getMessage()).isEqualTo("제목의 길이는 45자를 넘을 수 없습니다.");
+    }
+
+    @Test
     public void 직급상태예외_직급낮음 () {
         // given
         Approval.Param param = setupApproval();
@@ -196,7 +266,7 @@ public class ApprovalServiceTest {
                 () -> approvalService.updateApproval(param));
 
         // then
-        assertThat(e.getMessage()).isEqualTo("승인 대기 상태의 문서만 수정 가능합니다.");
+        assertThat(e.getMessage()).isEqualTo("승인 요청 상태의 문서만 수정 가능합니다.");
     }
 
     @Test
@@ -212,7 +282,7 @@ public class ApprovalServiceTest {
                 () -> approvalService.deleteApproval(param));
 
         // then
-        assertThat(e.getMessage()).isEqualTo("승인 대기 상태의 문서만 삭제 가능합니다.");
+        assertThat(e.getMessage()).isEqualTo("승인 요청 상태의 문서만 삭제 가능합니다.");
     }
 
     @Test
@@ -227,7 +297,7 @@ public class ApprovalServiceTest {
                 () -> approvalService.processApproval(param));
 
         // then
-        assertThat(e.getMessage()).isEqualTo("요청 상태의 문서만 승인 혹은 반려 가능합니다.");
+        assertThat(e.getMessage()).isEqualTo("대기 상태의 문서만 승인 혹은 반려 가능합니다.");
     }
 
 }
