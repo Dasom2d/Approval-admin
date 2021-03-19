@@ -43,8 +43,6 @@ public class ApprovalService {
     public Integer registerApproval(Approval.Param param) {
         param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
         param.setRequestStatusCode(RequestStatusCode.WAIT);
-        // 고쳐야함
-        param.setRegisterMemberId(2);
 
         approvalValidator.register(param);
         approvalRepository.registerApproval(param);
