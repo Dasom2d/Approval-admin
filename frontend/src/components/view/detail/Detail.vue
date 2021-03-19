@@ -1,11 +1,14 @@
 <template>
   <div >
+    <div class='loader' v-if='loading'>
+      <img src="../../../assets/loading.gif"></div>
+      
       기안신청서
     <div>
       <ModalView v-if="showApproveModal" @close="showApproveModal = false">
         <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
       </ModalView>
-      <button v-if="isAvailEdit" @click="showApproveModal = true">승인자 선택</button>
+      <button v-if="type === 'register' || type === 'edit'" @click="showApproveModal = true">승인자 선택</button>
       <ul>
         <li>{{approvalState}}</li>
       </ul>
@@ -94,7 +97,7 @@ export default {
       let approvalId = this.$route.params.id;
       this.getApproval(approvalId);
     } else if(this.type === 'register') {
-      this.requestMemberInfo = this.$$store.state.memberInfo;
+      this.requestMemberInfo = this.$store.state.memberInfo;
     }
   },
   methods: {
@@ -109,13 +112,14 @@ export default {
 		}
 	},
     getApproval(id) {
+      this.loading = true;
       let params = {
             approvalId: id
       } 
       axios.get('/api/approval/getApproval', {params: params})
               .then(res => {
                   if(res.data.code === 0) {
-                      console.log(res.data.body);
+                      this.loading = false;
                       
                       this.approvalId = res.data.body.approvalId;
                       this.approveMemberInfo = {
@@ -273,6 +277,7 @@ export default {
     },
     data() {
       return {
+        loading: false,
         loginedMemberInfo: this.$store.state.memberInfo,
         isAvailEdit: false,
         isAvailUpdate: false,
@@ -293,3 +298,12 @@ export default {
   
 }
 </script>
+
+<style>
+.loader {
+    position: fixed;
+    z-index: 99;
+    left: 180px;
+    top: 100px;
+}
+</style>

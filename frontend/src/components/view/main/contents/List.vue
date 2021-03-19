@@ -64,6 +64,7 @@ export default {
                             approval.requestApprovalType = REQUEST_APPROVAL_CODE[approval.approvalStatusCode+'_'+approval.requestStatusCode];
                         })
                     this.approvalList = res.data.body;
+                    EventBus.$emit('changeLoading', false);
                     }
                 });
         }

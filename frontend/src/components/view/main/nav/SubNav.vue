@@ -35,7 +35,8 @@ export default {
               approveMemberId: approveMemberId
           }
           EventBus.$emit('deliverSearchParam', param, typeName);
-          EventBus.$emit('changeContentState', false)
+          EventBus.$emit('changeContentState', false);
+          EventBus.$emit('changeLoading', true);
       }
   },
   data() {
