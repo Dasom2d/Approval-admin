@@ -2,44 +2,51 @@ package com.dasom.task.kakaoPay.service.member;
 
 import com.dasom.task.kakaoPay.model.member.Member;
 import com.dasom.task.kakaoPay.repository.member.MemberRepository;
+import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
+@RunWith(SpringRunner.class)
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
 public class MemberServiceTest {
-    MemberService memberService;
-    MemberRepository memberRepository;
-    @Autowired
-    SqlSessionTemplate sqlSessionTemplate;
 
-    @BeforeEach
-    public void beforeEach() {
-        memberRepository = new MemberRepository(sqlSessionTemplate);
-        memberService = new MemberService(memberRepository);
-    }
+    @Mock
+    SqlSessionTemplate sqlSessionTemplate;
+    @Mock
+    MemberRepository memberRepository = new MemberRepository(sqlSessionTemplate);
+    @Mock
+    ApprovalValidator approvalValidator;
+    @InjectMocks
+    MemberService memberService = new MemberService(memberRepository);
+
 
     @Test
-    public void 승인가능멤버리스트조회() {
+    public void 승인가능멤버리스트조회() throws Exception {
         // given
-        Integer memberId = 2;
+        Member target = new Member(2, 2);
+        Member expected = new Member(1, 1);
+        List<Member> expectedMemberList = new ArrayList<>();
+        expectedMemberList.add(expected);
+        given(memberRepository.getMemberList(target.getMemberId())).willReturn(expectedMemberList);
 
         // when
-        List<Member> memberList = memberService.getMemberList(memberId);
+        List<Member> result = memberService.getMemberList(target.getMemberId());
 
         // then
-        Integer memberGradeId = memberService.getMemberInfo(memberId).getGradeId();
-        assertThat(memberList.get(0).getGradeId()).isGreaterThan(memberGradeId);
+        assertThat(result.get(0).getGradeId()).isLessThan(target.getGradeId());
     }
 }

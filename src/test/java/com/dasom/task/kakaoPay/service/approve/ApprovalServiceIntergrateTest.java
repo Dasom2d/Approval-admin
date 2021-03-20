@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Transactional
-public class ApprovalIntergrateServiceTest {
+public class ApprovalServiceIntergrateTest {
 
     ApprovalService approvalService;
     ApprovalRepository approvalRepository;
