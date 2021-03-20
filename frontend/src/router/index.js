@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import LoginPage from '@/components/login/Login'
 import MainPage from '@/components/view/main/Main'
 import DetailPage from '@/components/view/detail/Detail'
+import ErrorPage from '@/components/error/Error'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       name: 'view',
       path: '/view/:id',
       component: DetailPage
+    },
+    {
+      name: 'error',
+      path: '/error',
+      component: ErrorPage
     }
   ]
 })

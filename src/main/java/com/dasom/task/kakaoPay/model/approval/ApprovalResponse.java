@@ -3,13 +3,11 @@ package com.dasom.task.kakaoPay.model.approval;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.beans.ConstructorProperties;
 
 @Getter
 @Setter
-@ToString
 public class ApprovalResponse<T> {
     private String message;
     private int code;

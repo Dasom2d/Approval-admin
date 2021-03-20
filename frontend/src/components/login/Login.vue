@@ -7,8 +7,6 @@
 
 <script>
 import LoginBox from '@/components/login/LoginBox'
-import axios from 'axios'
-
 export default {
   name: 'App',
   props: 'account',
@@ -16,21 +14,35 @@ export default {
     'LoginBox': LoginBox
   },
   mounted() {
-    this.getMemberList();
-  },
-  methods: {
-    getMemberList() {
-      axios.get('/api/member/getMemberList?memberId=5')
-              .then(res => {
-                  if(res.statusText === 'OK'){
-                    this.memberList = res.data;
-                  }
-              });
-    },
   },
   data() {
       return {
-            memberList: []
+            memberList: [
+              {
+                memberId: 1,
+                name: '라이언',
+                gradeId: 1,
+                gradeName: '회장'
+              },
+              {
+                memberId: 2,
+                name: '튜브',
+                gradeId: 2,
+                gradeName: '과장'
+              },
+              {
+                memberId: 3,
+                name: '네오',
+                gradeId: 3,
+                gradeName: '대리'
+              },
+              {
+                memberId: 4,
+                name: '무지',
+                gradeId: 4,
+                gradeName: '사원'
+              }
+            ]
       }
     }
 }
