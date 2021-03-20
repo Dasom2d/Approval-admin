@@ -28,7 +28,7 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApproval")
-    public ResponseEntity<ApprovalResponse<Approval>> getApproval(Approval.Search search) {
+    public ResponseEntity<ApprovalResponse<Approval>> getApproval(Approval.Search search) throws Exception{
         Approval approval = approvalService.getApproval(search);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApprovalResponse.of(ApprovalCode.FIND_SUCCESS.getMessageCode(),
@@ -43,7 +43,7 @@ public class ApprovalController {
      */
 
     @GetMapping("/getApprovalList")
-    public ResponseEntity<ApprovalResponse<List<Approval>>> getApprovalList(Approval.Search search) {
+    public ResponseEntity<ApprovalResponse<List<Approval>>> getApprovalList(Approval.Search search) throws Exception {
         List<Approval> approvalDocumentList = approvalService.getApprovalList(search);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -60,7 +60,7 @@ public class ApprovalController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity registerApproval(@RequestBody Approval.Param param) {
+    public ResponseEntity registerApproval(@RequestBody Approval.Param param) throws Exception {
         Integer approvalId = approvalService.registerApproval(param);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -77,7 +77,7 @@ public class ApprovalController {
 
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity updateApproval(@RequestBody Approval.Param param) {
+    public ResponseEntity updateApproval(@RequestBody Approval.Param param) throws Exception {
         Integer approvalId = approvalService.updateApproval(param);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -94,7 +94,7 @@ public class ApprovalController {
 
     @PutMapping("/process")
     @ResponseBody
-    public ResponseEntity processApproval(@RequestBody Approval.Param param) {
+    public ResponseEntity processApproval(@RequestBody Approval.Param param) throws Exception {
         Integer approvalId = approvalService.processApproval(param);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -111,7 +111,7 @@ public class ApprovalController {
 
     @DeleteMapping
     @ResponseBody
-    public ResponseEntity deleteApproval(@RequestBody Approval.Param param) {
+    public ResponseEntity deleteApproval(@RequestBody Approval.Param param) throws Exception {
         approvalService.deleteApproval(param);
 
         return ResponseEntity.status(HttpStatus.OK)
