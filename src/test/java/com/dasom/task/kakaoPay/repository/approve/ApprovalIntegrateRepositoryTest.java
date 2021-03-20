@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Transactional
-public class ApprovalRepositoryTest {
+public class ApprovalIntegrateRepositoryTest {
 
     ApprovalRepository approvalRepository;
     @Autowired
@@ -32,29 +32,48 @@ public class ApprovalRepositoryTest {
         approvalRepository = new ApprovalRepository(sqlSessionTemplate);
     }
 
+    private Approval.Search searchSetup() {
+        return Approval.Search.builder()
+                .approvalId(1)
+                .requestMemberId(2)
+                .approveMemberId(4)
+                .approvalStatusCode(ApprovalStatusCode.REQUEST)
+                .requestStatusCode(RequestStatusCode.WAIT)
+                .registerMemberId(2)
+                .build();
+    }
+
+    private Approval.Param paramSetup() {
+        return Approval.Param.builder()
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .approveMemberId(1)
+                .requestMemberId(4)
+                .approveMemberGradeId(1)
+                .requestMemberGradeId(4)
+                .approvalStatusCode(ApprovalStatusCode.REQUEST)
+                .requestStatusCode(RequestStatusCode.WAIT)
+                .build();
+    }
+
+
     @Test
     public void 목록조회테스트 () {
-        // given
         Approval.Search search = new Approval.Search();
-        search.setApprovalId(1);
         search.setTitle("휴가신청서");
-        search.setApproveMemberId(2);
-        search.setRequestMemberId(4);
-        search.setRequestStatusCode(RequestStatusCode.WAIT);
-        search.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
 
         // when
-        List<Approval> result = approvalRepository.getApprovalList(search);
+        List<Approval> results = approvalRepository.getApprovalList(search);
 
         // then
-        assertThat(result.get(0).getApprovalId()).isEqualTo(search.getApprovalId());
+        assertThat(results.get(0).getTitle()).isEqualTo(search.getTitle());
     }
 
 
     @Test
     public void 단건조회테스트 () {
         // given
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(1);
 
         // when
@@ -67,7 +86,7 @@ public class ApprovalRepositoryTest {
     @Test
     public void 등록테스트 () {
         // given
-        Approval.Param param = new Approval.Param();
+        Approval.Param param = paramSetup();
         param.setTitle("테스트 신청서");
         param.setContent("테스트 신청합니다.");
         param.setApproveMemberId(1);
@@ -80,7 +99,7 @@ public class ApprovalRepositoryTest {
         approvalRepository.registerApproval(param);
 
         // then
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(param.getApprovalId());
         Approval result = approvalRepository.getApproval(search);
         assertThat(result.getApprovalId()).isEqualTo(search.getApprovalId());
@@ -89,7 +108,7 @@ public class ApprovalRepositoryTest {
    @Test
     public void 수정테스트 () {
         // given
-       Approval.Param param = new Approval.Param();
+       Approval.Param param = paramSetup();
        param.setApprovalId(1);
        param.setContent("테스트 내용 수정합니다.");
 
@@ -97,7 +116,7 @@ public class ApprovalRepositoryTest {
        approvalRepository.updateApproval(param);
 
        // then
-       Approval.Search search = new Approval.Search();
+       Approval.Search search = searchSetup();
        search.setApprovalId(1);
        Approval result = approvalRepository.getApproval(search);
        assertThat(result.getContent()).isEqualTo(param.getContent());
@@ -106,7 +125,7 @@ public class ApprovalRepositoryTest {
     @Test
     public void 승인테스트 () {
         // given
-        Approval.Param param = new Approval.Param();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
@@ -115,7 +134,7 @@ public class ApprovalRepositoryTest {
         approvalRepository.processApproval(param);
 
         // then
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(1);
         ApprovalStatusCode result = approvalRepository.getApproval(search).getApprovalStatusCode();
         assertThat(result).isEqualTo(param.getApprovalStatusCode());
@@ -124,14 +143,14 @@ public class ApprovalRepositoryTest {
    @Test
     public void 삭제테스트() {
         // given
-       Approval.Param param = new Approval.Param();
+       Approval.Param param = paramSetup();
        param.setApprovalId(1);
 
        // when
        approvalRepository.deleteApproval(param);
 
        // then
-       Approval.Search search = new Approval.Search();
+       Approval.Search search = searchSetup();
        search.setApprovalId(param.getApprovalId());
        Approval result = approvalRepository.getApproval(search);
        assertNull(result);

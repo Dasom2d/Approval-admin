@@ -50,7 +50,14 @@ public class ApprovalServiceTest {
     }
 
     private Approval.Search searchSetup() {
-        return new Approval.Search(1, "테스트 제목", 2, 4, ApprovalStatusCode.REQUEST, RequestStatusCode.WAIT, 2);
+        return Approval.Search.builder()
+                .approvalId(1)
+                .requestMemberId(2)
+                .approveMemberId(4)
+                .approvalStatusCode(ApprovalStatusCode.REQUEST)
+                .requestStatusCode(RequestStatusCode.WAIT)
+                .registerMemberId(2)
+                .build();
     }
 
     private Approval.Param paramSetup() {

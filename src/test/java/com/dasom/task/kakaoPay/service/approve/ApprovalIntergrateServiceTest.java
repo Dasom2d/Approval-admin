@@ -40,8 +40,19 @@ public class ApprovalIntergrateServiceTest {
         approvalRepository = new ApprovalRepository(sqlSessionTemplate);
         approvalService = new ApprovalService(approvalRepository, approvalValidator);
     }
+    
+    private Approval.Search searchSetup() {
+        return Approval.Search.builder()
+                .approvalId(1)
+                .requestMemberId(2)
+                .approveMemberId(4)
+                .approvalStatusCode(ApprovalStatusCode.REQUEST)
+                .requestStatusCode(RequestStatusCode.WAIT)
+                .registerMemberId(2)
+                .build();
+    }
 
-    public Approval.Param setupApproval() {
+    private Approval.Param paramSetup() {
         return Approval.Param.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
@@ -51,6 +62,7 @@ public class ApprovalIntergrateServiceTest {
                 .requestMemberGradeId(4)
                 .approvalStatusCode(ApprovalStatusCode.REQUEST)
                 .requestStatusCode(RequestStatusCode.WAIT)
+                .registerMemberId(4)
                 .build();
     }
 
@@ -58,24 +70,19 @@ public class ApprovalIntergrateServiceTest {
     public void 기안목록조회 () {
         // given
         Approval.Search search = new Approval.Search();
-        search.setApprovalId(1);
         search.setTitle("휴가신청서");
-        search.setApproveMemberId(2);
-        search.setRequestMemberId(4);
-        search.setRequestStatusCode(RequestStatusCode.WAIT);
-        search.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
 
         // when
         List<Approval> results = approvalService.getApprovalList(search);
 
         // then
-        assertThat(results.get(0).getApprovalId()).isEqualTo(search.getApprovalId());
+        assertThat(results.get(0).getTitle()).isEqualTo(search.getTitle());
     }
 
     @Test
     public void 기안단건조회 () {
         // given
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(1);
 
         // when
@@ -88,13 +95,13 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 기안상신 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
 
         // when
         int approvalId = approvalService.registerApproval(param);
 
         // then
-        Approval.Search searchParam = new Approval.Search();
+        Approval.Search searchParam = searchSetup();
         searchParam.setApprovalId(approvalId);
         Approval result = approvalService.getApproval(searchParam);
 
@@ -104,7 +111,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 기안수정 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setContent("테스트 내용 수정합니다.");
 
@@ -112,7 +119,7 @@ public class ApprovalIntergrateServiceTest {
         Integer approvalId = approvalService.updateApproval(param);
 
         // then
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(approvalId);
         Approval result = approvalService.getApproval(search);
 
@@ -122,7 +129,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 기안승인 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
 
@@ -130,7 +137,7 @@ public class ApprovalIntergrateServiceTest {
         Integer approvalId = approvalService.processApproval(param);
 
         // then
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(approvalId);
         ApprovalStatusCode result = approvalService.getApproval(search).getApprovalStatusCode();
         assertThat(result).isEqualTo(param.getApprovalStatusCode());
@@ -139,14 +146,14 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 기안삭제 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
 
         // when
         approvalService.deleteApproval(param);
 
         // then
-        Approval.Search search = new Approval.Search();
+        Approval.Search search = searchSetup();
         search.setApprovalId(1);
         Approval result = approvalService.getApproval(search);
         assertNull(result);
@@ -155,7 +162,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 상신예외_제목없음 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setTitle(null);
 
         // when
@@ -169,7 +176,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 상신예외_내용없음 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setContent(null);
 
         // when
@@ -183,7 +190,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 상신예외_요청자지정안됨 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setRequestMemberId(null);
 
         // when
@@ -197,7 +204,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 상신예외_승인자지정안됨 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApproveMemberId(null);
 
         // when
@@ -211,7 +218,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 상신예외_제목길이 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setTitle("제목길이를45자이상으로합니다.제목길이를45자이상으로합니다.제목길이를45자이상으로합니다.");
 
         // when
@@ -225,7 +232,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 직급상태예외_직급낮음 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApproveMemberGradeId(4);
         param.setRequestMemberGradeId(1);
 
@@ -240,7 +247,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 직급상태예외_직급같음 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApproveMemberGradeId(1);
         param.setRequestMemberGradeId(1);
 
@@ -255,7 +262,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 요청상태예외_수정 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
@@ -271,7 +278,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 요청상태예외_삭제 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setApprovalStatusCode(ApprovalStatusCode.APPROVE);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
@@ -287,7 +294,7 @@ public class ApprovalIntergrateServiceTest {
     @Test
     public void 승인상태예외 () {
         // given
-        Approval.Param param = setupApproval();
+        Approval.Param param = paramSetup();
         param.setApprovalId(1);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
 

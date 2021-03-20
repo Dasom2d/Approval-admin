@@ -48,6 +48,7 @@ public class Approval {
         private Integer registerMemberId;
     }
 
+    @Builder
     @Getter
     @Setter
     @NoArgsConstructor
