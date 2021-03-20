@@ -44,7 +44,7 @@ export default {
 .loader {
     position: fixed;
     z-index: 99;
-    left: 180px;
-    top: 430px;
+    left: 900px;
+    top: 300px;
 }
 </style>
