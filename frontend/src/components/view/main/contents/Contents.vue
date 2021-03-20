@@ -2,8 +2,10 @@
     <div>
         <div class='loader' v-if='loading'>
             <img src="../../../../assets/loading.gif"></div>
-        <Default v-show="isDefaultShow"></Default>
-        <List v-show="!isDefaultShow"></List>
+        <div>
+            <Default v-show="isDefaultShow"></Default>
+            <List v-show="!isDefaultShow"></List>
+        </div>
     </div>
 </template>
 

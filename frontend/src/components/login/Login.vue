@@ -1,6 +1,5 @@
 <template>
-    <div>
-        로그인이다 쫘식아
+    <div class="login">
         <login-box v-for="(member, idx) in memberList" :key="idx" :account="member"></login-box>
     </div>
 </template>
@@ -44,3 +43,13 @@ export default {
     }
 }
 </script>
+
+<style>
+
+.login{
+    width: 980px;
+    margin: 10px auto;
+    display: flex;
+}
+
+</style>

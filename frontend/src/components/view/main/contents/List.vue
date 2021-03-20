@@ -2,26 +2,33 @@
     <div id="list">
         <div id="content">
             <div class="section_tit frst">
-                <h3>{{typeName}}<span class="tit_dsc"> 총 {{approvalList.length}} 건</span>
+                <h3 style="padding-bottom: 15px;">{{typeName}}<span class="tit_dsc"> 총 {{approvalList.length}} 건</span>
                 </h3>
-                <table id="approval-list">
+                <table class="tb_lst">
+                    <colgroup>
+                        <col style="width:67px;*width:157px">
+                        <col>
+                        <col style="width:93px;*width:83px">
+                        <col style="width:107px;*width:97px">
+                        <col style="width:107px;*width:97px">
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th scope="col">문서번호</th>
+                            <th scope="col" class="bg_lft">문서번호</th>
                             <th scope="col">제목</th>
                             <th scope="col">기안자</th>
                             <th scope="col">승인자</th>
                             <th scope="col">승인상태</th>
                             <th scope="col">기안일</th>
-                            <th scope="col">완료일</th>
+                            <th scope="col" class="bg_rgt">완료일</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="(approval, idx) in approvalList" :key="idx">
+                    <tbody v-if="approvalList.length > 0">
+                        <tr v-for="(approval, idx) in approvalList" :key="idx" class="noline context" style="background-color: rgb(255, 255, 255);">
                             <td>{{approval.approvalId}}</td>
                             <td>
-                                <router-link :to="`view/${approval.approvalId}`">
-                                    {{approval.title}}</router-link>
+                                <a><router-link :to="`view/${approval.approvalId}`">
+                                    {{approval.title}}</router-link></a>
                             </td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
@@ -29,6 +36,9 @@
                             <td>{{approval.registerDate}}</td>
                             <td>{{approval.approveDate}}</td>
                         </tr>
+                    </tbody>
+                    <tbody v-if="approvalList.length == 0">
+                        <tr><td colspan="7">문서가 없습니다.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -53,7 +63,7 @@ export default {
     created: function() {
         EventBus.$on('deliverSearchParam', (params, typeName) => {
             this.typeName = typeName;
-            this.searchParam = params; 
+            this.searchParam = params;
             this.getApprovalList();
         })
     },

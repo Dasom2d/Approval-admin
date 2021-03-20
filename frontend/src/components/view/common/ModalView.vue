@@ -3,9 +3,7 @@
         <div class="overlay" @click="$emit('close')"></div>
         <div class="modal-card">
             <slot />
-            <button @click="$emit('close')">
-                    닫기
-                  </button>
+            <div style="padding-top:20px;"><button @click="$emit('close')">닫기</button></div>
         </div>
     </div>
 </template>

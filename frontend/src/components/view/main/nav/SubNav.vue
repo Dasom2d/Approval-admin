@@ -1,20 +1,20 @@
 <template>
-    <div id="sub_nav">
-        <div class="nav_lst first" style="padding-top:14px;padding-bottom:14px;">
+    <div class="snb_nav">
+        <div class="nav_lst frst">
             <h3>
-                <router-link to="/register">기안 신청하기</router-link>
+                <div class="big_menu"><router-link to="/register">기안 신청하기</router-link></div>
             </h3>
         </div>
         <div class="nav_lst">
-            <h3 @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'WAIT')">{{APPROVAL_TYPE.WAIT}} </h3>
+            <h3> <a class="big_menu" @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'WAIT')">{{APPROVAL_TYPE.WAIT}}</a></h3>
             <ul>
-                <li @click="setSearchParam('WAIT', null, null, loginedMemberInfo.memberId, 'WAIT_APPROVE')">{{APPROVAL_TYPE.WAIT_APPROVE}}</li>
-                <li @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, null, 'WAIT_REQUEST')">{{APPROVAL_TYPE.WAIT_REQUEST}}</li>
+                <li><a class="small_menu" @click="setSearchParam('WAIT', null, null, loginedMemberInfo.memberId, 'WAIT_APPROVE')">{{APPROVAL_TYPE.WAIT_APPROVE}}</a></li>
+                <li><a class="small_menu" @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, null, 'WAIT_REQUEST')">{{APPROVAL_TYPE.WAIT_REQUEST}}</a></li>
             </ul>
-            <h3 @click="setSearchParam('COMPLETE', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE')">{{APPROVAL_TYPE.COMPLETE}}</h3>
+            <h3><a class="big_menu" @click="setSearchParam('COMPLETE', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE')">{{APPROVAL_TYPE.COMPLETE}}</a></h3>
             <ul>
-                <li @click="setSearchParam('COMPLETE', 'APPROVE', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_APPROVE')">{{APPROVAL_TYPE.COMPLETE_APPROVE}}</li>
-                <li @click="setSearchParam('COMPLETE', 'RETURN', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_RETURN')">{{APPROVAL_TYPE.COMPLETE_RETURN}}</li>
+                <li><a class="small_menu" @click="setSearchParam('COMPLETE', 'APPROVE', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_APPROVE')">{{APPROVAL_TYPE.COMPLETE_APPROVE}}</a></li>
+                <li><a class="small_menu" @click="setSearchParam('COMPLETE', 'RETURN', loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'COMPLETE_RETURN')">{{APPROVAL_TYPE.COMPLETE_RETURN}}</a></li>
             </ul>
         </div>
     </div>

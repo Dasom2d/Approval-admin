@@ -1,8 +1,11 @@
 <template>
-    <div id="loginBox">
-        <div style="border: 1px solid black;">
-            ㅎㅏ이
-            <div @click='login($attrs.account)'>{{this.$attrs.account.name}} {{this.$attrs.account.gradeName}} 로그인</div>
+    <div class="loginbox">
+        <div>
+            <div style="padding-top: 100px" 
+                @click='login($attrs.account)'>
+                <span style="font-size: 20px; font-wigth: bold;">
+                    <a style="cursor: pointer;">{{this.$attrs.account.name}}</a></span>
+                <span style="font-size: 15px">    {{this.$attrs.account.gradeName}}</span></div>
         </div>
     </div>
 </template>
@@ -20,3 +23,13 @@ export default {
     }
 }
 </script>
+
+<style>
+.loginbox {
+    border: 1px solid black;
+    flex:1;
+    width:25%;
+    height: 300px;
+    box-sizing: border-box;
+}
+</style>

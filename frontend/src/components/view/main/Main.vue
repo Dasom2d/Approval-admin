@@ -1,9 +1,19 @@
 <template>
-    <div id='container'>
-        <div>{{this.$store.state.loginMember.member.name}} 님의 문서</div>
-        <button @click="logout">로그아웃</button>
-        <SubNav></SubNav>
-        <Contents></Contents>
+    <div id="container">
+        <div style="padding-top: 20px">
+            <span class="name">{{this.$store.state.loginMember.member.name}}</span>
+            <span class="nim">님의 문서</span>
+    
+            <button @click="logout">로그아웃</button>
+        </div>
+        <div class="contents_btm" style="padding-top: 50px;">
+            <div class="snb">
+                <SubNav></SubNav>
+            </div>
+            <div id="content">
+                <Contents></Contents>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -30,3 +40,51 @@ export default {
     }
 }
 </script>
+
+<style>
+
+#container {
+    position: relative;
+    width: 980px;
+    margin: 0 auto;
+    zoom: 1;
+}
+
+#container .name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#container .nim {
+    font-size: 15px;
+}
+
+.snb {
+    float: left;
+    width: 180px;
+    margin: 18px 30px 0 0;
+    text-align: left;
+}
+
+.snb .snb_nav .nav_lst.frst {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin: 0;
+    border: 0;
+}
+
+div .big_menu {
+    cursor: pointer;
+    font-size: 16px;
+    color: #222;
+    text-decoration: none;
+}
+
+.small_menu {
+    line-height: 18px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+</style>

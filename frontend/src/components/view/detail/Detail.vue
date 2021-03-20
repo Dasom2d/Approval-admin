@@ -1,85 +1,94 @@
 <template>
-    <div>
+    <div class="content">
         <div class='loader' v-if='loading'>
             <img src="../../../assets/loading.gif"></div>
     
-        기안신청서
+        <div class="section_title2">
+            <h2 class="fl h_tx">기안신청서</h2>
+            <p class="fr p_tx">{{approvalState}}</p>
+        </div>
         <div>
             <ModalView v-if="showApproveModal" @close="showApproveModal = false">
                 <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
             </ModalView>
-            <button v-if="type === 'register' || type === 'edit'" @click="showApproveModal = true">승인자 선택</button>
-            <ul>
-                <li>{{approvalState}}</li>
-            </ul>
-            <ul>
-                <li>
-                    <div class='type'>
-                        <span>요청자</span>
-                    </div>
-                    <div class='name'>
-                        <span title='요청자'>{{requestMemberInfo.name}}</span>
-                    </div>
-                    <div class='date'>
-                        <span title='요청일자'> {{registerDate}}</span>
-                    </div>
-                </li>
-                <li>
-                    <div class='type'>
-                        <span>승인자</span>
-                    </div>
-                    <div class='name'>
-                        <span title='승인자'>{{approveMemberInfo.name}}</span>
-                    </div>
-                    <div class='date'>
-                        <span title='승인일자'> {{approveDate}}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div></div>
-        <div></div>
+            <div style="padding-top: 15px">
+                <button v-if="type === 'register' || type === 'edit'" @click="showApproveModal = true">승인자 선택</button>
+            </div>
+            <div class="group_lst" id="lineview_group_lst" style="padding-top: 35px;">
+                <div id="apms_aprvLineArea">
+                    <div id="apms_aprvLine_hori" class="lst_drafter_wrap">
+                        <ul class="lst_drafter" style="margin-left:0px">
+                            <li id="0" class="off dim">
+                                <div class="type">
+                                    <span>일반결재</span>
+                                </div>
+                                <div class="name">
+                                    <a>{{requestMemberInfo.name}}</a>
+                                </div>
+                                <div class="date">
+                                    {{registerDate}}
+                                </div>
+                            </li>
     
-        <div class="tbl_type2">
-            <table>
-                <colgroup>
-                    <col style="width:130px">
-                    <col>
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="col">
-                            <div class="th">제목</div>
-                        </th>
-                        <td>
-                            <div class="td">
-                                <input type="text" v-model="title" :disabled="type==='view'" title="제목 입력란" class="ipt_txt" placeholder="" style="width:200px">
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="col">
-                            <div class="th">내용</div>
-                        </th>
-                        <td>
-                            <div class="td">
-                                <textarea v-model="content" :disabled="type==='view'" name="내용 입력란" cols="20" rows="3" class="ipt_txt" style="width:100%;height:56px"></textarea>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            <li id="1" class="off dim">
+                                <div class="type">
+                                    <span>	일반결재</span>
+                                </div>
+                                <div class="name">
+                                    <a id="apms_aprvrNm_TL10051" href="#null" empcd="TL10051" class="test" title="오정운">{{approveMemberInfo.name}}</a>
+                                </div>
+                                <div class="date">
+                                    {{approveDate}}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <button @click="$router.push({path: '/main'})">목록으로</button>
-            <button v-if="type==='register'" @click="registApproval()">등록하기</button>
-            <button v-if="isAvailEdit && type!='edit'" @click="goEdit()">편집</button>
-            <button v-if="isAvailEdit && type!='edit'" @click="deleteApproval()">삭제</button>
-            <button v-if="type==='edit'" @click="updateApproval()">저장</button>
+        <div style="width:100%;text-align: center; width: 100%; height: 100%;">
+            <div class="tbl_type2" style="padding-top: 35px; width:300px; height:300px; margin:0 auto;">
+                <table>
+                    <colgroup>
+                        <col style="width:130px">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="col">
+                                <div class="th">제목</div>
+                            </th>
+                            <td>
+                                <div class="td">
+                                    <input type="text" v-model="title" :disabled="type==='view'" title="제목 입력란" class="ipt_txt" placeholder="" style="width:200px">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="col">
+                                <div class="th">내용</div>
+                            </th>
+                            <td>
+                                <div class="td">
+                                    <textarea v-model="content" :disabled="type==='view'" name="내용 입력란" cols="20" rows="3" class="ipt_txt" style="width:100%;height:56px"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="padding-top: 10px;">
+            <button @click="$router.push({path: '/main'})">목록으로</button>&nbsp;&nbsp;&nbsp;
+            <button v-if="type==='register'" @click="registApproval()">등록하기</button>&nbsp;&nbsp;&nbsp;
+            <button v-if="isAvailEdit && type!='edit'" @click="goEdit()">편집</button>&nbsp;&nbsp;&nbsp;
+            <button v-if="isAvailEdit && type!='edit'" @click="deleteApproval()">삭제</button>&nbsp;&nbsp;&nbsp;
+            <button v-if="type==='edit'" @click="updateApproval()">저장</button>&nbsp;&nbsp;&nbsp;
     
-            <button v-if="isAvailUpdate" @click="processApproval('APPROVE')">승인</button>
-            <button v-if="isAvailUpdate" @click="processApproval('RETURN')">반려</button>
+            <button v-if="isAvailUpdate" @click="processApproval('APPROVE')">승인</button>&nbsp;&nbsp;&nbsp;
+            <button v-if="isAvailUpdate" @click="processApproval('RETURN')">반려</button>&nbsp;&nbsp;&nbsp;
         </div>
+    
     </div>
 </template>
 
@@ -111,14 +120,6 @@ export default {
         }
     },
     methods: {
-        redirect() {
-            const loginMemberId = this.loginedMemberInfo.memberId;
-            if (this.type != 'register') {
-                if (loginMemberId != this.approveMemberInfo.memberId && loginMemberId != this.approveMemberInfo.memberId) {
-                    this.$router.push({ path: '/main' })
-                }
-            }
-        },
         goEdit() {
             this.type = 'edit';
         },

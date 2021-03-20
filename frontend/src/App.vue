@@ -1,8 +1,8 @@
 <template>
     <div id="app">
         <!-- <img src="./assets/logo.png"> -->
-        <div class="container">
-            {{this.$store.state.loginMember.member.name}}
+        <div>
+            <Header></Header>
             <router-view></router-view>
         </div>
     </div>
@@ -10,15 +10,22 @@
 
 
 <script>
+import Header from '@/components/header/Header'
+
 export default {
     name: 'App',
-    components: {},
+    components: {
+        'Header': Header
+    },
     computed: {},
 }
 </script>
 
 
 <style>
+@import './assets/app.css';
+@import './assets/draft.css';
+
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

@@ -1,9 +1,13 @@
 <template>
     <div class="content">
-        <h1>승인자 선택</h1>
-        <div>
-            <h2>승인자를 선택해주세요</h2>
-            <table>
+        <div class='loader' v-if='loading'>
+            <img src="../../../../assets/loading.gif"></div>
+        <div class="section_title2" style="width: 438px">
+            <h2 class="fl h_tx">승인자 선택</h2>
+            <p class="fr p_tx"></p>
+        </div>
+        <div style="padding-top: 20px;">
+            <table class="tb_lst" style="width: 438px">
                 <thead>
                     <th>사번</th>
                     <th>이름</th>
@@ -12,13 +16,12 @@
                 <tbody>
                     <tr v-for="(member, idx) in memberList" :key="idx">
                         <td>{{member.memberId}}</td>
-                        <td><a @click="deliverMemberInfo(member)">{{member.name}}</a></td>
+                        <td><a style="cursor: pointer;" @click="deliverMemberInfo(member)">{{member.name}}</a></td>
                         <td>{{member.gradeName}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    
     </div>
 </template>
 
@@ -34,9 +37,11 @@ export default {
     },
     methods: {
         getMemberList() {
+            this.loading = true;
             axios.get('/api/member/getMemberList?memberId=' + this.$store.state.loginMember.member.memberId)
                 .then(res => {
                     if (res.statusText === 'OK') {
+                        this.loading = false;
                         this.memberList = res.data;
                     }
                 });
@@ -49,6 +54,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             approveMember: {},
             memberList: []
         }
