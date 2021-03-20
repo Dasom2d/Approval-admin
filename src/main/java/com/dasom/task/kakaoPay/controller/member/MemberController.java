@@ -19,14 +19,14 @@ public class MemberController {
     private MemberService memberService;
 
     /**
-     * 승인 가능한 멤버 목록 조회
+     * 멤버 목록 조회
      * @param memberId
      * @return List<Member>
      */
 
-    @GetMapping("/getAvailApproveMemberList")
+    @GetMapping("/getMemberList")
     @ResponseBody
-    public List<Member> getMemberList(@RequestParam Integer memberId) {
+    public List<Member> getMemberList(@RequestParam(required = false) Integer memberId) {
         List<Member> m = memberService.getMemberList(memberId);
         return m;
     }

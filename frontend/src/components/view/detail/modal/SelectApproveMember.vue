@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     getMemberList() {
-      axios.get('/api/member/getAvailApproveMemberList?memberId=' + this.$store.state.memberInfo.memberId)
+      axios.get('/api/member/getMemberList?memberId=' + this.$store.state.memberInfo.memberId)
               .then(res => {
                   if(res.statusText === 'OK'){
                     this.memberList = res.data;

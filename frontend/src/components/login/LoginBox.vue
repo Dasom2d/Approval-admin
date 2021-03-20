@@ -2,7 +2,7 @@
   <div id="loginBox">
     <div style="border: 1px solid black;">
       ㅎㅏ이 
-      <div @click='login($attrs.account)'>{{this.$attrs.account.name}} 로그인</div>
+      <div @click='login($attrs.account)'>{{this.$attrs.account.name}} {{this.$attrs.account.gradeName}} 로그인</div>
     </div>
   </div>
 </template>

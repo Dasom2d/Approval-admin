@@ -92,6 +92,7 @@ export default {
     'ModalView': ModalView
   },
   mounted: function() {
+
     this.type = this.$route.name;
     if(this.type === 'view' || this.type === 'update'){
       let approvalId = this.$route.params.id;
@@ -101,6 +102,14 @@ export default {
     }
   },
   methods: {
+    redirect() {
+      const loginMemberId = this.loginedMemberInfo.memberId;
+      if(this.type != 'register') {
+        if(loginMemberId != this.approveMemberInfo.memberId && loginMemberId != this.approveMemberInfo.memberId) {
+            this.$router.push({path: '/main'})
+        }
+      }
+    },
     goEdit() {
       this.type = 'edit';
     },
@@ -120,6 +129,10 @@ export default {
               .then(res => {
                   if(res.data.code === 0) {
                       this.loading = false;
+                      if(res.data.body === null) {
+                         this.$router.push({path: '/main'});
+                         return;
+                      }
                       
                       this.approvalId = res.data.body.approvalId;
                       this.approveMemberInfo = {
@@ -157,13 +170,14 @@ export default {
           content: this.content,
           approveMemberId: this.approveMemberInfo.memberId,
           requestMemberId: this.requestMemberInfo.memberId, 
+          registerMemberId: this.loginedMemberInfo.memberId,
           approveMemberGradeId: this.approveMemberInfo.gradeId,
           requestMemberGradeId: this.requestMemberInfo.gradeId,
         }
         return params;
       },
     validate() {
-      if(this.isAvailEdit && this.requestStatusCode === 'WAIT') {
+      if(this.isAvailEdit && !this.requestStatusCode === 'WAIT') {
         throw "요청상태의 문서만 수정가능합니다."
       }
       if(this.isNull(this.title)) {
@@ -258,7 +272,8 @@ export default {
         } else {
             let deleteParam = {
               approvalId: this.approvalId,
-              approvalStatusCode: this.approvalStatusCode
+              approvalStatusCode: this.approvalStatusCode,
+              requestStatusCode: this.requestStatusCode,
             };
             axios.delete('/api/approval', {
               data: deleteParam})

@@ -18,6 +18,9 @@ export default {
     'SubNav': SubNav,
     'Contents': Contents
   },
+  mounted() {
+    console.log(this.$store.state.memberInfo);
+  },
   methods: {
     logout() {
       this.$store.state.memberInfo = {};
