@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-        loginedMemberInfo: this.$store.state.memberInfo,
+        loginedMemberInfo: this.$store.state.loginMember.member,
         approvalList: [],
         APPROVAL_TYPE: {
             WAIT: '진행중인 결재 문서',
