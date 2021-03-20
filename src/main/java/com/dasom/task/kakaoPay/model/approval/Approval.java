@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +32,7 @@ public class Approval {
     private LocalDateTime modifyDate;
     private Integer registerMemberId;
 
+    @Builder
     @Getter
     @Setter
     public static class Param {
@@ -46,8 +48,10 @@ public class Approval {
         private Integer registerMemberId;
     }
 
-
-    @Data
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Search {
         private Integer approvalId;
         private String title;
@@ -56,6 +60,18 @@ public class Approval {
         private ApprovalStatusCode approvalStatusCode;
         private RequestStatusCode requestStatusCode;
         private Integer registerMemberId;
+    }
+
+    public Approval toApproval(Approval.Search search) {
+        Approval result = new Approval();
+        result.setApprovalId(search.approvalId);
+        result.setTitle(search.title);
+        result.setRequestMemberId(search.requestMemberId);
+        result.setApproveMemberId(search.approveMemberId);
+        result.setRequestStatusCode(search.requestStatusCode);
+        result.setApprovalStatusCode(search.approvalStatusCode);
+
+        return result;
     }
 
 }
