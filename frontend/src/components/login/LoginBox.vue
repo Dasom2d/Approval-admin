@@ -3,9 +3,9 @@
         <div>
             <div style="padding-top: 100px" 
                 @click='login($attrs.account)'>
-                <span style="font-size: 20px; font-wigth: bold;">
-                    <a style="cursor: pointer;">{{this.$attrs.account.name}}</a></span>
-                <span style="font-size: 15px">    {{this.$attrs.account.gradeName}}</span></div>
+              <a style="cursor: pointer;">  <span style="font-size: 20px; font-wigth: bold;">
+                    {{this.$attrs.account.name}}</span>
+                <span style="font-size: 15px">    {{this.$attrs.account.gradeName}}</span></a></div>
         </div>
     </div>
 </template>
