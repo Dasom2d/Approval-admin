@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     login(account) {
-      this.$store.state.memberInfo = account;
+      this.$store.commit('loginMember/LOGIN', account);
       this.$router.push({path: '/main'})
     }
   }

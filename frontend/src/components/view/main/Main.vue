@@ -1,6 +1,6 @@
 <template>
   <div id='container'>
-    <div>{{this.$store.state.memberInfo.name}} 님의 문서</div>
+    <div>{{this.$store.state.loginMember.member.name}} 님의 문서</div>
       <button @click="logout">로그아웃</button>
       <SubNav></SubNav>
       <Contents></Contents>
@@ -19,11 +19,10 @@ export default {
     'Contents': Contents
   },
   mounted() {
-    console.log(this.$store.state.memberInfo);
   },
   methods: {
     logout() {
-      this.$store.state.memberInfo = {};
+      this.$store.commit('loginMember/LOGOUT');
       this.$router.push({path: '/'});
     }
   },

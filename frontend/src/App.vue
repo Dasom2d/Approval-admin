@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <div class="container">
-      {{this.$store.state.memberInfo.name}}
+      <!-- {{this.$store.state.memberInfo.name}} -->
       <router-view></router-view>
     </div>
   </div>

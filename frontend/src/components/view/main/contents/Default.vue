@@ -52,7 +52,7 @@ export default {
     },
     data() {
       return {
-        loginedMemberInfo: this.$store.state.memberInfo,
+        loginedMemberInfo: this.$store.state.loginMember.member,
         approvalList: []
       }
     }

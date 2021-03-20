@@ -293,7 +293,7 @@ export default {
     data() {
       return {
         loading: false,
-        loginedMemberInfo: this.$store.state.memberInfo,
+        loginedMemberInfo: this.$store.state.loginMember.member,
         isAvailEdit: false,
         isAvailUpdate: false,
         type: 'register',

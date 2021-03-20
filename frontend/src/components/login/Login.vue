@@ -9,11 +9,11 @@
 import LoginBox from '@/components/login/LoginBox'
 export default {
   name: 'App',
-  props: 'account',
   components: {
     'LoginBox': LoginBox
   },
   mounted() {
+    console.log(this.$store.state);
   },
   data() {
       return {
