@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class='loader' v-if='loading'>
-          <img src="../../../../assets/loading.gif"></div>
+            <img src="../../../../assets/loading.gif"></div>
         <Default v-if="isDefaultShow"></Default>
         <List v-if="!isDefaultShow"></List>
     </div>
@@ -14,28 +14,27 @@ import Default from '@/components/view/main/contents/Default'
 import List from '@/components/view/main/contents/List'
 
 export default {
-  name: 'Contents',
-  components: {
-      'Default': Default,
-      'List': List
-  },
-  created: function() {
-      EventBus.$on('changeContentState', state => {
-          this.isDefaultShow = state;
-      });
-      EventBus.$on('changeLoading', isLoading => {
-          this.loading = isLoading;
-      });
-  },
-  methods: {
-  },
-  data() {
-    return {
-      loading: false,
-      state: false,
-      isDefaultShow: true
+    name: 'Contents',
+    components: {
+        'Default': Default,
+        'List': List
+    },
+    created: function() {
+        EventBus.$on('changeContentState', state => {
+            this.isDefaultShow = state;
+        });
+        EventBus.$on('changeLoading', isLoading => {
+            this.loading = isLoading;
+        });
+    },
+    methods: {},
+    data() {
+        return {
+            loading: false,
+            state: false,
+            isDefaultShow: true
+        }
     }
-  }
 }
 </script>
 

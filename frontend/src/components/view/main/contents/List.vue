@@ -19,8 +19,10 @@
                     <tbody>
                         <tr v-for="(approval, idx) in approvalList" :key="idx">
                             <td>{{approval.approvalId}}</td>
-                            <td><router-link :to="`view/${approval.approvalId}`">
-                                {{approval.title}}</router-link></td>
+                            <td>
+                                <router-link :to="`view/${approval.approvalId}`">
+                                    {{approval.title}}</router-link>
+                            </td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
                             <td>{{approval.requestApprovalType}}</td>
@@ -28,7 +30,7 @@
                             <td>{{approval.approveDate}}</td>
                         </tr>
                     </tbody>
-            </table>
+                </table>
             </div>
         </div>
     </div>
@@ -47,34 +49,34 @@ const REQUEST_APPROVAL_CODE = {
 }
 
 export default {
-  name: 'List',
-  created: function() {
-      EventBus.$on('deliverSearchParam', (params, typeName) => {
-          this.typeName = typeName;
-          this.searchParam = params;
-          this.getApprovalList();
-      })
-  },
+    name: 'List',
+    created: function() {
+        EventBus.$on('deliverSearchParam', (params, typeName) => {
+            this.typeName = typeName;
+            this.searchParam = params;
+            this.getApprovalList();
+        })
+    },
     methods: {
         getApprovalList() {
-            axios.get('/api/approval/getApprovalList', {params: this.searchParam})
+            axios.get('/api/approval/getApprovalList', { params: this.searchParam })
                 .then(res => {
-                    if(res.data.code === 0) {
+                    if (res.data.code === 0) {
                         res.data.body.forEach(approval => {
-                            approval.requestApprovalType = REQUEST_APPROVAL_CODE[approval.approvalStatusCode+'_'+approval.requestStatusCode];
+                            approval.requestApprovalType = REQUEST_APPROVAL_CODE[approval.approvalStatusCode + '_' + approval.requestStatusCode];
                         })
-                    this.approvalList = res.data.body;
-                    EventBus.$emit('changeLoading', false);
+                        this.approvalList = res.data.body;
+                        EventBus.$emit('changeLoading', false);
                     }
                 });
         }
     },
-  data () {
-    return {
-        searchParam: {},
-        approvalList: [],
-        typeName: ''
+    data() {
+        return {
+            searchParam: {},
+            approvalList: [],
+            typeName: ''
+        }
     }
-  }
 }
 </script>

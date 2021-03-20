@@ -10,18 +10,20 @@
                         <ul class="lst_type">
                             <li v-for="(approval, idx) in approvalList" :key="idx">
                                 <em>{{approval.approvalType}}</em>
-                                <p><router-link :to="`view/${approval.approvalId}`">
-                                        {{approval.title}}</router-link></p>
+                                <p>
+                                    <router-link :to="`view/${approval.approvalId}`">
+                                        {{approval.title}}</router-link>
+                                </p>
                                 <span>
-                                    <a>{{approval.requestMemberName}}</a>
-                                    <span>{{approval.registerDate}}</span>
+                                        <a>{{approval.requestMemberName}}</a>
+                                        <span>{{approval.registerDate}}</span>
                                 </span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </table>
-        </div>         
+        </div>
     </div>
 </template>
 
@@ -34,27 +36,26 @@ export default {
     name: 'Default',
     mounted: function() {
         let params = {
-              requestMemberId: this.loginedMemberInfo.memberId,
-              approveMemberId: this.loginedMemberInfo.memberId
+            requestMemberId: this.loginedMemberInfo.memberId,
+            approveMemberId: this.loginedMemberInfo.memberId
         }
-        axios.get('/api/approval/getApprovalList', {params: params})
+        axios.get('/api/approval/getApprovalList', { params: params })
             .then(res => {
-                if(res.data.code === 0) {
+                if (res.data.code === 0) {
                     res.data.body.forEach(approval => {
-                        approval.requestStatusCode === 'COMPLETE' ? 
-                        approval.approvalType = '완료문서' : approval.approvalType  = '대기문서';
+                        approval.requestStatusCode === 'COMPLETE' ?
+                            approval.approvalType = '완료문서' : approval.approvalType = '대기문서';
                     })
-                this.approvalList = res.data.body;
+                    this.approvalList = res.data.body;
                 }
             });
     },
-    methods: {
-    },
+    methods: {},
     data() {
-      return {
-        loginedMemberInfo: this.$store.state.loginMember.member,
-        approvalList: []
-      }
+        return {
+            loginedMemberInfo: this.$store.state.loginMember.member,
+            approvalList: []
+        }
     }
 }
 </script>
