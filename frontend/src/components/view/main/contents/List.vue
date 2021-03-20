@@ -43,7 +43,7 @@ import EventBus from '@/js/eventBus'
 import axios from 'axios'
 
 const REQUEST_APPROVAL_CODE = {
-    REQUEST_WAIT: '요청중 문서',
+    REQUEST_WAIT: '요청중',
     APPROVE_COMPLETE: '승인 완료',
     RETURN_COMPLETE: '반려 완료'
 }
@@ -53,7 +53,7 @@ export default {
     created: function() {
         EventBus.$on('deliverSearchParam', (params, typeName) => {
             this.typeName = typeName;
-            this.searchParam = params;
+            this.searchParam = params; 
             this.getApprovalList();
         })
     },
