@@ -28,15 +28,29 @@ export default {
         'SubNav': SubNav,
         'Contents': Contents
     },
-    mounted() {},
+    mounted() {
+        if(this.isNull(this.loginedMemberInfo)) {
+            alert('로그인해주세요.');
+            this.$router.push({ path: '/' });
+        }
+    },
     methods: {
+        isNull: function(s) {
+            if (s == "" || s == null || s == undefined || (s != null && typeof s == "object" && !Object.keys(s).length)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
         logout() {
             this.$store.commit('loginMember/LOGOUT');
             this.$router.push({ path: '/' });
         }
     },
     data() {
-        return {}
+        return {
+            loginedMemberInfo: this.$store.state.loginMember.member,
+        }
     }
 }
 </script>

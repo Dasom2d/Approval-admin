@@ -111,15 +111,25 @@ export default {
         'ModalView': ModalView
     },
     mounted: function() {
+        let loginMember = this.$store.state.loginMember
         this.type = this.$route.name;
+        this.isValidMember();
+
         if (this.type === 'view' || this.type === 'update') {
             let approvalId = this.$route.params.id;
             this.getApproval(approvalId);
         } else if (this.type === 'register') {
-            this.requestMemberInfo = this.$store.state.loginMember.member;
+            this.requestMemberInfo = loginMember.member;
         }
+
     },
     methods: {
+        rediect(type, msg) {
+            alert(msg);
+            let targetPath;
+            type === 'login' ? targetPath = '/' : type === 'main' ? targetPath = '/main' : '';
+            this.$router.push({ path: targetPath });
+        },
         goEdit() {
             this.type = 'edit';
         },
@@ -139,36 +149,60 @@ export default {
                 .then(res => {
                     if (res.data.code === 0) {
                         this.loading = false;
+
                         if (res.data.body === null) {
-                            this.$router.push({ path: '/main' });
+                            this.rediect('main', '존재하지 않는 문서입니다.');
                             return;
                         }
-
-                        this.approvalId = res.data.body.approvalId;
-                        this.approveMemberInfo = {
-                            memberId: res.data.body.approveMemberId,
-                            name: res.data.body.approveMemberName,
-                            gradeId: res.data.body.approveMemberGradeId
-                        }
-                        this.requestMemberInfo = {
-                            memberId: res.data.body.requestMemberId,
-                            name: res.data.body.requestMemberName,
-                            gradeId: res.data.body.requestMemberGradeId
-                        }
-                        this.requestStatusCode = res.data.body.requestStatusCode;
-                        this.approvalStatusCode = res.data.body.approvalStatusCode;
-                        this.approvalState = REQUEST_STATUS_CODE[res.data.body.approvalStatusCode];
-                        this.title = res.data.body.title;
-                        this.content = res.data.body.content;
-                        this.registerDate = res.data.body.registerDate;
-                        this.approveDate = res.data.body.approveDate;
-
-                        this.isAvailEdit = this.type === 'view' && this.requestStatusCode === 'WAIT' &&
-                            this.loginedMemberInfo.memberId === res.data.body.requestMemberId;
-                        this.isAvailUpdate = this.type === 'view' && this.requestStatusCode === 'WAIT' &&
-                            this.loginedMemberInfo.memberId === res.data.body.approveMemberId;
+                        this.setData(res.data.body);
+                        this.isValidMember();
                     }
                 });
+        },
+        isValidMember() {
+            let loginMemberId = this.loginedMemberInfo.memberId;
+            let approveMemberId = this.approveMemberInfo.memberId;
+            let requestMemberId = this.requestMemberInfo.memberId;
+
+            if (this.isNull(this.loginedMemberInfo)) {
+                this.rediect('login', '로그인해주세요.');
+                return;
+            }
+
+            if (loginMemberId != approveMemberId && loginMemberId != requestMemberId) {
+                this.rediect('main', '권한이 없습니다.');
+                return;
+            }
+
+            if (this.type === 'register' && loginMemberId === 1) {
+                this.rediect('main', '권한이 없습니다.');
+                return;
+            }
+        },
+        setData(info) {
+            this.approvalId = info.approvalId;
+            this.approveMemberInfo = {
+                memberId: info.approveMemberId,
+                name: info.approveMemberName,
+                gradeId: info.approveMemberGradeId
+            }
+            this.requestMemberInfo = {
+                memberId: info.requestMemberId,
+                name: info.requestMemberName,
+                gradeId: info.requestMemberGradeId
+            }
+            this.requestStatusCode = info.requestStatusCode;
+            this.approvalStatusCode = info.approvalStatusCode;
+            this.approvalState = REQUEST_STATUS_CODE[info.approvalStatusCode];
+            this.title = info.title;
+            this.content = info.content;
+            this.registerDate = info.registerDate;
+            this.approveDate = info.approveDate;
+
+            this.isAvailEdit = this.type === 'view' && this.requestStatusCode === 'WAIT' &&
+                this.loginedMemberInfo.memberId === info.requestMemberId;
+            this.isAvailUpdate = this.type === 'view' && this.requestStatusCode === 'WAIT' &&
+                this.loginedMemberInfo.memberId === info.approveMemberId;
         },
         approveMember(member, showApproveModal) {
             this.approveMemberInfo = member;
@@ -332,4 +366,4 @@ export default {
     left: 900px;
     top: 300px;
 }
-</style> 
+</style>
