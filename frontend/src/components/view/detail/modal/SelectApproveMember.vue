@@ -42,10 +42,13 @@ export default {
             this.loading = true;
             axios.get('/api/member/getMemberList?memberId=' + this.$store.state.loginMember.member.memberId)
                 .then(res => {
-                    if (res.statusText === 'OK') {
+                    if (res.status === 200) {
                         this.loading = false;
                         this.memberList = res.data;
                     }
+                }).catch(err => {
+                    alert('조회에 실패하였습니다.');
+                    console.log(err);
                 });
         },
         deliverMemberInfo(member) {

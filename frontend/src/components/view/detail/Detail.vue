@@ -99,7 +99,7 @@ import SelectApproveMember from '@/components/view/detail/modal/SelectApproveMem
 import ModalView from '@/components/view/common/ModalView'
 
 const REQUEST_STATUS_CODE = {
-    REQUEST: '요청문서',
+    REQUEST: '요청중',
     APPROVE: '승인문서',
     RETURN: '반려문서'
 }
@@ -156,6 +156,7 @@ export default {
                 return false;
             }
 
+            // 회장은 기안 등록안함
             if (this.type === 'register' && loginMemberId === 1) {
                 this.rediect('main', '권한이 없습니다.');
                 return false;
@@ -164,13 +165,19 @@ export default {
         },
         isAuthMember(response) {
             const loginMemberId = this.loginedMemberInfo.memberId;
+
             if (response.data.code === 0) {
                 this.loading = false;
             } else {
-                alert(response.data.message);
+                alert('조회에 실패하였습니다.');
                 return false;
             }
             const info = response.data.body;
+
+            if(this.isNull(info)) {
+                this.rediect('main', '존재하지않는 문서입니다.');
+                return false;
+            }
 
             if (loginMemberId != info.approveMemberId && loginMemberId != info.requestMemberId) {
                 this.rediect('main', '권한이 없습니다.');
@@ -265,11 +272,11 @@ export default {
                 alert(e);
             }
         },
-        goUpdate(url, param) {
+        goUpdate(url, param, msg) {
             axios.put(url, param)
                 .then(response => {
                     if (response.data.code === 0) {
-                        alert('수정하였습니다.');
+                        alert(msg+'하였습니다.');
                     }
                     window.location.href = '/view/' + this.approvalId;
                 })
@@ -288,7 +295,8 @@ export default {
                     updateParam.approvalId = this.approvalId;
                     updateParam.requestStatusCode = this.requestStatusCode;
                     updateParam.approvalStatusCode = this.approvalStatusCode;
-                    this.goUpdate('/api/approval/update', updateParam);
+                    
+                    this.goUpdate('/api/approval/update', updateParam, '수정');
                 }
             } catch (e) {
                 alert(e);
@@ -302,7 +310,9 @@ export default {
                         requestStatusCode: this.requestStatusCode,
                         approvalStatusCode: changedStatusCode
                     }
-                    this.goUpdate('/api/approval/process', processParam);
+                    let msg;
+                    changedStatusCode === 'APPROVE' ? msg = '승인' : msg = '반려';
+                    this.goUpdate('/api/approval/process', processParam, msg);
                 }
             } catch (e) {
                 alert(e);

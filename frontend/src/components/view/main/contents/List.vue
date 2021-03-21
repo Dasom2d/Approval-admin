@@ -6,11 +6,13 @@
                 </h3>
                 <table class="tb_lst">
                     <colgroup>
-                        <col style="width:67px;*width:157px">
+                        <col style="width: 67px;">
                         <col>
-                        <col style="width:93px;*width:83px">
-                        <col style="width:107px;*width:97px">
-                        <col style="width:107px;*width:97px">
+                        <col style="width: 93px;">
+                        <col style="width: 65px;">
+                        <col style="width: 65px;">
+                        <col style="width: 107px;">
+                        <col style="width: 107px;">
                     </colgroup>
                     <thead>
                         <tr>
@@ -27,8 +29,10 @@
                         <tr v-for="(approval, idx) in approvalList" :key="idx" class="noline context" style="background-color: rgb(255, 255, 255);">
                             <td>{{approval.approvalId}}</td>
                             <td>
-                                <a><router-link :to="`view/${approval.approvalId}`">
-                                    {{approval.title}}</router-link></a>
+                                <a>
+                                    <router-link :to="`view/${approval.approvalId}`">
+                                        {{approval.title}}</router-link>
+                                </a>
                             </td>
                             <td>{{approval.requestMemberName}}</td>
                             <td>{{approval.approveMemberName}}</td>
@@ -38,7 +42,9 @@
                         </tr>
                     </tbody>
                     <tbody v-if="approvalList.length == 0">
-                        <tr><td colspan="7">문서가 없습니다.</td></tr>
+                        <tr>
+                            <td colspan="7">문서가 없습니다.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -69,15 +75,20 @@ export default {
     },
     methods: {
         getApprovalList() {
+            EventBus.$emit('changeLoading', true);
             axios.get('/api/approval/getApprovalList', { params: this.searchParam })
                 .then(res => {
                     if (res.data.code === 0) {
+                        EventBus.$emit('changeLoading', false);
                         res.data.body.forEach(approval => {
                             approval.requestApprovalType = REQUEST_APPROVAL_CODE[approval.approvalStatusCode + '_' + approval.requestStatusCode];
                         })
                         this.approvalList = res.data.body;
-                        EventBus.$emit('changeLoading', false);
                     }
+                }).catch(err => {
+                    alert('조회에 실패하였습니다.');
+                    console.log(err);
+                    EventBus.$emit('changeLoading', false);
                 });
         }
     },

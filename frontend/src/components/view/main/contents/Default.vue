@@ -29,8 +29,8 @@
                                         </a>
                                     </p>
                                     <span class="rgt" style="width:300px; margin-right:5px;">
-                                                <a>{{approval.requestMemberName}}</a>
-                                                <span class="date">{{approval.registerDate}}</span>
+                                                        <a>{{approval.requestMemberName}}</a>
+                                                        <span class="date">{{approval.registerDate}}</span>
                                     </span>
                                 </li>
                             </ul>
@@ -49,6 +49,7 @@
 
 <script>
 import axios from 'axios'
+import EventBus from '@/js/eventBus'
 
 
 export default {
@@ -62,6 +63,7 @@ export default {
     },
     methods: {
         getRecentApprovalList(params) {
+            EventBus.$emit('changeLoading', true);
             axios.get('/api/approval/getApprovalList', { params: params })
                 .then(res => {
                     this.loading = false;
@@ -71,7 +73,12 @@ export default {
                                 approval.approvalType = '완료문서' : approval.approvalType = '대기문서';
                         })
                         this.approvalList = res.data.body;
+                        EventBus.$emit('changeLoading', false);
                     }
+                }).catch(err => {
+                    alert('조회에 실패하였습니다.');
+                    console.log(err);
+                    EventBus.$emit('changeLoading', false);
                 });
         }
     },

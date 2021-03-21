@@ -49,6 +49,7 @@
         <if test="approvalStatusCode != null">
             AND avl.approval_status_code = #{approvalStatusCode}
         </if>
+        ORDER BY avl.approval_id DESC;
     </select>
 
 
