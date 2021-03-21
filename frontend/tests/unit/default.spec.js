@@ -35,7 +35,7 @@ describe('Main.vue', () => {
       requestMemberId: loginMember.memberId,
       approveMemberId: loginMember.memberId
     }
-
+    
     console.log('조회');
     const  recentApprovalList = wrapper.vm.getRecentApprovalList(params);
      console.log(recentApprovalList);
