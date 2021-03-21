@@ -20,7 +20,7 @@
 - Java, Springboot
 - Vue.js, Javascript(ES6)
 - Gradle
-- MySQL
+- AWS RDS, MySQL
 
 
 
