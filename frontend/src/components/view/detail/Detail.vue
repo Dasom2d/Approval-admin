@@ -113,15 +113,14 @@ export default {
     mounted: function() {
         let loginMember = this.$store.state.loginMember
         this.type = this.$route.name;
-        this.isValidMember();
-
-        if (this.type === 'view' || this.type === 'update') {
-            let approvalId = this.$route.params.id;
-            this.getApproval(approvalId);
-        } else if (this.type === 'register') {
-            this.requestMemberInfo = loginMember.member;
+        if (this.isVaildMember()) {
+            if (this.type === 'view' || this.type === 'update') {
+                let approvalId = this.$route.params.id;
+                this.getApproval(approvalId);
+            } else if (this.type === 'register') {
+                this.requestMemberInfo = loginMember.member;
+            }
         }
-
     },
     methods: {
         rediect(type, msg) {
@@ -140,44 +139,44 @@ export default {
                 return false;
             }
         },
-        getApproval(id) {
+        async getApproval(id) {
             this.loading = true;
             let params = {
                 approvalId: id
             }
-            axios.get('/api/approval/getApproval', { params: params })
-                .then(res => {
-                    if (res.data.code === 0) {
-                        this.loading = false;
-
-                        if (res.data.body === null) {
-                            this.rediect('main', '존재하지 않는 문서입니다.');
-                            return;
-                        }
-                        this.setData(res.data.body);
-                        this.isValidMember();
-                    }
-                });
-        },
-        isValidMember() {
-            let loginMemberId = this.loginedMemberInfo.memberId;
-            let approveMemberId = this.approveMemberInfo.memberId;
-            let requestMemberId = this.requestMemberInfo.memberId;
-
-            if (this.isNull(this.loginedMemberInfo)) {
-                this.rediect('login', '로그인해주세요.');
-                return;
+            const request = await axios.get('/api/approval/getApproval', { params: params });
+            if (this.isAuthMember(request)) {
+                this.setData(request.data.body);
             }
-
-            if (loginMemberId != approveMemberId && loginMemberId != requestMemberId) {
-                this.rediect('main', '권한이 없습니다.');
-                return;
+        },
+        isVaildMember() {
+            const loginMemberId = this.loginedMemberInfo.memberId;
+            if (this.isNull(loginMemberId)) {
+                this.rediect('login', '로그인해주세요.');
+                return false;
             }
 
             if (this.type === 'register' && loginMemberId === 1) {
                 this.rediect('main', '권한이 없습니다.');
-                return;
+                return false;
             }
+            return true;
+        },
+        isAuthMember(response) {
+            const loginMemberId = this.loginedMemberInfo.memberId;
+            if (response.data.code === 0) {
+                this.loading = false;
+            } else {
+                alert(response.data.message);
+                return false;
+            }
+            const info = response.data.body;
+
+            if (loginMemberId != info.approveMemberId && loginMemberId != info.requestMemberId) {
+                this.rediect('main', '권한이 없습니다.');
+                return false;
+            }
+            return true;
         },
         setData(info) {
             this.approvalId = info.approvalId;
