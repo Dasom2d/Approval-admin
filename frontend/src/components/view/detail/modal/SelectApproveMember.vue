@@ -31,9 +31,14 @@ import axios from 'axios'
 
 export default {
     name: "SelectApproveMember",
-    props: {},
+    props: ['modal'],
+    watch: {
+        modal: function() {
+            this.modal ? this.getMemberList() : '';
+        }
+    },
     mounted() {
-        this.getMemberList();
+      //  this.getMemberList();
     },
     methods: {
         getMemberList() {

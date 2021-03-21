@@ -11,7 +11,9 @@ export default {
     components: {
         'LoginBox': LoginBox
     },
-    mounted() {},
+    mounted() {
+        this.$store.commit('loginMember/LOGOUT');
+    },
     data() {
         return {
             memberList: [{

@@ -1,7 +1,7 @@
 <template>
     <div class="snb_nav">
         <div class="nav_lst frst">
-            <h3>
+            <h3 v-show="loginedMemberInfo.memberId != 1">
                 <div class="big_menu"><router-link to="/register">기안 신청하기</router-link></div>
             </h3>
         </div>

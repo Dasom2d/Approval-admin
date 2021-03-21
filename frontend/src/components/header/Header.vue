@@ -1,7 +1,6 @@
 <template>
     <div id="header">
         <div class="section_header" id="section_header">
-            <div class="left">결재</div>
             <div class="right">{{this.$store.state.loginMember.member.name}}<span class="nim"> 님</span>
             </div>
         </div>
@@ -35,9 +34,14 @@ export default {
 
 #header .left {
     float: left;
+    font-weight: bold;
+    font-size: 20px;
+    padding-left: 30px;
 }
 
 #header .right {
+    padding-right: 20px;
+    font-size: 15px;
     float: right;
 }
 

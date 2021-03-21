@@ -1,5 +1,8 @@
 <template>
     <div id="default">
+        <div class='loader' v-if='loading'>
+            <img src="../../../../assets/loading.gif">
+        </div>
         <table class="mainContentTable">
             <colgroup>
                 <col width="*">
@@ -20,16 +23,18 @@
                                 <li v-for="(approval, idx) in approvalList" :key="idx">
                                     <em class="situ">{{approval.approvalType}}</em>
                                     <p class="tit">
-                                        <a><router-link :to="`view/${approval.approvalId}`">
-                                            {{approval.title}}</router-link></a>
+                                        <a>
+                                            <router-link :to="`view/${approval.approvalId}`">
+                                                {{approval.title}}</router-link>
+                                        </a>
                                     </p>
                                     <span class="rgt" style="width:300px; margin-right:5px;">
-                                        <a>{{approval.requestMemberName}}</a>
-                                        <span class="date">{{approval.registerDate}}</span>
+                                                <a>{{approval.requestMemberName}}</a>
+                                                <span class="date">{{approval.registerDate}}</span>
                                     </span>
                                 </li>
                             </ul>
-                            <ul v-if="approvalList.length == 0" class="lst_type" >
+                            <ul v-if="approvalList.length == 0" class="lst_type">
                                 <li> 문서가 없습니다.
                                 </li>
                             </ul>
@@ -59,6 +64,7 @@ export default {
         getRecentApprovalList(params) {
             axios.get('/api/approval/getApprovalList', { params: params })
                 .then(res => {
+                    this.loading = false;
                     if (res.data.code === 0) {
                         res.data.body.forEach(approval => {
                             approval.requestStatusCode === 'COMPLETE' ?
@@ -71,6 +77,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             loginedMemberInfo: this.$store.state.loginMember.member,
             approvalList: []
         }

@@ -39,5 +39,6 @@ export default {};
     min-height: 500px;
     z-index: 10;
     opacity: 1;
+    top: 100px;
 }
 </style>

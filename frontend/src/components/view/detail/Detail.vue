@@ -1,15 +1,15 @@
 <template>
     <div class="content">
         <div class='loader' v-if='loading'>
-            <img src="../../../assets/loading.gif"></div>
-    
+            <img src="../../../assets/loading.gif">
+        </div>
         <div class="section_title2">
             <h2 class="fl h_tx">기안신청서</h2>
             <p class="fr p_tx">{{approvalState}}</p>
         </div>
         <div>
-            <ModalView v-if="showApproveModal" @close="showApproveModal = false">
-                <SelectApproveMember :props="approveMemberInfo" @approveMember="approveMember"></SelectApproveMember>
+            <ModalView v-show="showApproveModal" @close="showApproveModal = false">
+                <SelectApproveMember :modal="showApproveModal" @approveMember="approveMember"></SelectApproveMember>
             </ModalView>
             <div style="padding-top: 15px">
                 <button v-if="type === 'register' || type === 'edit'" @click="showApproveModal = true">승인자 선택</button>
@@ -329,7 +329,7 @@ export default {
 .loader {
     position: fixed;
     z-index: 99;
-    left: 690px;
+    left: 900px;
     top: 300px;
 }
-</style>
+</style> 
