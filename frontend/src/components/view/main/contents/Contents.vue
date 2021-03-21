@@ -28,6 +28,9 @@ export default {
         EventBus.$on('changeLoading', isLoading => {
             this.loading = isLoading;
         });
+        EventBus.$on('showDefault', isDefaultShow => {
+            this.isDefaultShow = isDefaultShow;
+        });
     },
     methods: {},
     data() {

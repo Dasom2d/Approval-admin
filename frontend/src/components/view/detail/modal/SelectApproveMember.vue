@@ -37,9 +37,6 @@ export default {
             this.modal ? this.getMemberList() : '';
         }
     },
-    mounted() {
-      //  this.getMemberList();
-    },
     methods: {
         getMemberList() {
             this.loading = true;

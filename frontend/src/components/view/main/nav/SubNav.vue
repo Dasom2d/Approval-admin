@@ -6,6 +6,7 @@
             </h3>
         </div>
         <div class="nav_lst">
+            <h3> <a class="big_menu" @click="goRecentList()">{{APPROVAL_TYPE.RECENT}}</a></h3>
             <h3> <a class="big_menu" @click="setSearchParam('WAIT', null, loginedMemberInfo.memberId, loginedMemberInfo.memberId, 'WAIT')">{{APPROVAL_TYPE.WAIT}}</a></h3>
             <ul>
                 <li><a class="small_menu" @click="setSearchParam('WAIT', null, null, loginedMemberInfo.memberId, 'WAIT_APPROVE')">{{APPROVAL_TYPE.WAIT_APPROVE}}</a></li>
@@ -28,6 +29,9 @@ import EventBus from '@/js/eventBus'
 export default {
     name: 'SubNav',
     methods: {
+        goRecentList() {
+            EventBus.$emit('showDefault', true);
+        },
         setSearchParam(requestStatusCode, approvalStatusCode, requestMemberId, approveMemberId, type) {
             let typeName = this.APPROVAL_TYPE[type];
             let param = {
@@ -38,7 +42,6 @@ export default {
             }
             EventBus.$emit('deliverSearchParam', param, typeName);
             EventBus.$emit('changeContentState', false);
-            EventBus.$emit('changeLoading', true);
         }
     },
     data() {
@@ -46,6 +49,7 @@ export default {
             loginedMemberInfo: this.$store.state.loginMember.member,
             approvalList: [],
             APPROVAL_TYPE: {
+                RECENT: '최근 결재 문서',
                 WAIT: '진행중인 결재 문서',
                 WAIT_APPROVE: '결재할 문서',
                 WAIT_REQUEST: '상신/결재한 문서',
