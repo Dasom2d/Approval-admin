@@ -4,7 +4,7 @@
             <span class="name">{{this.$store.state.loginMember.member.name}}</span>
             <span class="nim">님의 문서</span>
     
-            <button @click="logout">로그아웃</button>
+            <span style="padding-left: 10px;"><button @click="logout">로그아웃</button></span>
         </div>
         <div class="contents_btm" style="padding-top: 50px;">
             <div class="snb">

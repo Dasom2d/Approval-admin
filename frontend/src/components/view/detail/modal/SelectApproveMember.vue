@@ -1,5 +1,5 @@
 <template>
-    <div class="content">
+    <div class="content" style="width: 380px; position: relative; right: 28px; height:400px;">
         <div class='loader' v-if='loading'>
             <img src="../../../../assets/loading.gif"></div>
         <div class="section_title2" style="width: 438px">

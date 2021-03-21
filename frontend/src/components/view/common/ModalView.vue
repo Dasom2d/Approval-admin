@@ -31,7 +31,7 @@ export default {};
 
 .modal-card {
     position: relative;
-    max-width: 80%;
+    width: 504px;
     margin: auto;
     margin-top: 30px;
     padding: 20px;
