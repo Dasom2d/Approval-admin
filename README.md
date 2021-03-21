@@ -28,12 +28,12 @@
 ### 실행 방법
 #### 프로젝트 빌드
 1. project root 이동
-2. `./grablew build`  생성된 jar 확인
+2. `./grablew build`  경로에 생성된 jar 확인
 
 생성된 jar 예시) `kakaoPay-0.0.1-SNAPSHOT.jar`
 
 #### 프로젝트 실행
-1. `java -jar hello-spring-0.0.1-SNAPSHOT.jar` 
+1. `java -jar kakaoPay-0.0.1-SNAPSHOT.jar` 
 2. `http://localhost:3000/` 에서 프로젝트 확인 가능
 
 
