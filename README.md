@@ -1,6 +1,9 @@
 # Approval-admin
 
+
 ## 프로젝트 소개
+
+
 
 #### Lion Company의 직원들이 결재 문서를 조회하고 상신할 수 있다.
 |멤버ID|이름|직급|
@@ -11,6 +14,8 @@
 |4|무지|사원|
 
 
+
+
 ### 시스템 구성환경
 - Java, Springboot
 - Vue.js, Javascript(ES6)
@@ -18,10 +23,13 @@
 - MySQL
 
 
+
+
 ### 실행 방법
 #### 프로젝트 빌드
 1. project root 이동
 2. `./grablew build`  생성된 jar 확인
+
 생성된 jar 예시) `kakaoPay-0.0.1-SNAPSHOT.jar`
 
 #### 프로젝트 실행
