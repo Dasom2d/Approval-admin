@@ -1,7 +1,4 @@
 # Approval-admin
-approval-admin
-# Approval-admin
-***
 
 ## 프로젝트 소개
 
