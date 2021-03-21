@@ -2,7 +2,6 @@ package com.dasom.task.kakaoPay.service.member;
 
 import com.dasom.task.kakaoPay.model.member.Member;
 import com.dasom.task.kakaoPay.repository.member.MemberRepository;
-import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -28,8 +28,6 @@ public class MemberServiceTest {
     SqlSessionTemplate sqlSessionTemplate;
     @Mock
     MemberRepository memberRepository = new MemberRepository(sqlSessionTemplate);
-    @Mock
-    ApprovalValidator approvalValidator;
     @InjectMocks
     MemberService memberService = new MemberService(memberRepository);
 
@@ -47,6 +45,8 @@ public class MemberServiceTest {
         List<Member> result = memberService.getMemberList(target.getMemberId());
 
         // then
-        assertThat(result.get(0).getGradeId()).isLessThan(target.getGradeId());
+        assertThat(result.get(0).getGradeId()).isLessThan(target.getMemberId());
+        assertNotNull(result);
+
     }
 }

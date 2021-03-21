@@ -20,10 +20,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @RunWith(SpringRunner.class)
@@ -87,7 +91,12 @@ public class ApprovalServiceTest {
         List<Approval> result = approvalService.getApprovalList(search);
 
         // then
-        assertThat(result.size()).isEqualTo(expectedList.size());
+        assertNotNull(result);
+        assertEquals(result.size(), expectedList.size());
+
+        verify(approvalService, atLeastOnce()).getApprovalList(search);
+        verify(approvalService, never()).getApproval(search);
+        verify(approvalService, timeout(3000)).getApprovalList(search);
     }
 
     @Test
@@ -102,6 +111,14 @@ public class ApprovalServiceTest {
 
         // then
         assertThat(result.getApprovalId()).isEqualTo(expected.getApprovalId());
+
+        assertTrue(expected.equals(expected));
+        assertEquals(expected.getApprovalId(), expected.getApprovalId());
+        assertNotNull(result);
+
+        verify(approvalService, atLeastOnce()).getApproval(search);
+        verify(approvalService, never()).getApprovalList(search);
+        verify(approvalService, timeout(3000)).getApproval(search);
     }
 
     @Test
@@ -115,7 +132,14 @@ public class ApprovalServiceTest {
         int resultApprovalId =  approvalService.registerApproval(param);
 
         // then
-        assertThat(resultApprovalId).isEqualTo(expected.getApprovalId());
+        assertEquals(resultApprovalId, expected.getApprovalId());
+        assertNotNull(resultApprovalId);
+
+        verify(approvalService, atLeastOnce()).registerApproval(param);
+        verify(approvalService, never()).updateApproval(param);
+        verify(approvalService, timeout(3000)).registerApproval(param);
+
+
     }
 
     @Test
@@ -139,7 +163,12 @@ public class ApprovalServiceTest {
         given(approvalRepository.getApproval(search)).willReturn(expected);
         Approval result = approvalService.getApproval(search);
 
-        assertThat(result.getContent()).isEqualTo(param.getContent());
+        assertEquals(result.getContent(), expected.getContent());
+        assertNotNull(resultApprovalId);
+
+        verify(approvalService, atLeastOnce()).updateApproval(param);
+        verify(approvalService, never()).processApproval((param));
+        verify(approvalService, timeout(3000)).updateApproval(param);
     }
 
     @Test
@@ -163,7 +192,12 @@ public class ApprovalServiceTest {
         given(approvalRepository.getApproval(search)).willReturn(expected);
         Approval result = approvalService.getApproval(search);
 
-        assertThat(result.getApprovalStatusCode()).isEqualTo(param.getApprovalStatusCode());
+        assertEquals(result.getApprovalStatusCode(), expected.getApprovalStatusCode());
+        assertNotNull(resultApprovalId);
+
+        verify(approvalService, atLeastOnce()).processApproval(param);
+        verify(approvalService, never()).updateApproval((param));
+        verify(approvalService, timeout(3000)).processApproval(param);
     }
 
     @Test
@@ -186,6 +220,10 @@ public class ApprovalServiceTest {
         Approval result = approvalService.getApproval(search);
 
         assertNull(result);
+
+        verify(approvalService, atLeastOnce()).deleteApproval(param);
+        verify(approvalService, never()).updateApproval((param));
+        verify(approvalService, timeout(3000)).deleteApproval(param);
     }
 
     @Test(expected = ApprovalBadRequestException.class)
@@ -202,7 +240,7 @@ public class ApprovalServiceTest {
         approvalService.registerApproval(param);
 
         // then
-        assertThat(e.getMessage()).isEqualTo("제목을 입력해주세요.");
+        assertEquals(e.getMessage(), "제목을 입력해주세요.");
     }
 
     @Test(expected = ApprovalBadRequestException.class)
