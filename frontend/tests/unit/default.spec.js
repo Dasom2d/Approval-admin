@@ -30,15 +30,15 @@ describe('Main.vue', () => {
 
   it('로그인된멤버로최근문서리스트를불러오는가', () => {
     const loginMember = store.state.loginMember.member;
-    console.log('tetete');
     const params = {
       requestMemberId: loginMember.memberId,
       approveMemberId: loginMember.memberId
     }
     
-    console.log('조회');
+
+    // api 호출 불가
     const  recentApprovalList = wrapper.vm.getRecentApprovalList(params);
-     console.log(recentApprovalList);
+    console.log(recentApprovalList);
     // let expectedMemberName = loginMember.name;
     // let resultMemberName = recentApprovalList[0].requestMemberName;
 

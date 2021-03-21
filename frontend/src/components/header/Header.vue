@@ -1,6 +1,7 @@
 <template>
     <div id="header">
         <div class="section_header" id="section_header">
+            <div class="left">Lion Company</div>
             <div class="right">{{this.$store.state.loginMember.member.name}}<span class="nim"> 님</span>
             </div>
         </div>
