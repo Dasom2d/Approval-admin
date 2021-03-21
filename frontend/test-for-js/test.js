@@ -1,4 +1,7 @@
 // test/test.js
+
+
+
 describe('Example', function() {
     describe('add 함수 테스트', function() {
         it('1+2를 넣으면 3의 값이 나와야 한다.', function(done) {
@@ -23,5 +26,9 @@ describe('Example', function() {
             // }
         });
 
+        it('조회가 이루어져야한다.', function(done) {
+            var list = approval();
+            console.log(list);
+        })
     });
 });

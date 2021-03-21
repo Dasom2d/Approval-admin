@@ -53,18 +53,22 @@ export default {
             requestMemberId: this.loginedMemberInfo.memberId,
             approveMemberId: this.loginedMemberInfo.memberId
         }
-        axios.get('/api/approval/getApprovalList', { params: params })
-            .then(res => {
-                if (res.data.code === 0) {
-                    res.data.body.forEach(approval => {
-                        approval.requestStatusCode === 'COMPLETE' ?
-                            approval.approvalType = '완료문서' : approval.approvalType = '대기문서';
-                    })
-                    this.approvalList = res.data.body;
-                }
-            });
+        this.getRecentApprovalList(params);
     },
-    methods: {},
+    methods: {
+        getRecentApprovalList(params) {
+            axios.get('/api/approval/getApprovalList', { params: params })
+                .then(res => {
+                    if (res.data.code === 0) {
+                        res.data.body.forEach(approval => {
+                            approval.requestStatusCode === 'COMPLETE' ?
+                                approval.approvalType = '완료문서' : approval.approvalType = '대기문서';
+                        })
+                        this.approvalList = res.data.body;
+                    }
+                });
+        }
+    },
     data() {
         return {
             loginedMemberInfo: this.$store.state.loginMember.member,

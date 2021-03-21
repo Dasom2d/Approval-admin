@@ -9,7 +9,7 @@ localVue.use(Vuex);
 describe('Main.vue', () => {
   let store;
   let wrapper;
-  let temporaryData = {
+  const temporaryData = {
     loginMember: {
       member: {
         memberId: 1,
@@ -29,10 +29,9 @@ describe('Main.vue', () => {
 
 
   it('로그인정보가존재하는가', () => {
-    console.log('test start')
-    let expectedMemberName = store.state.loginMember.member.name;
-    let resultMemberName = wrapper.vm.$store.state.loginMember.member.name;
+    const expectedMemberId = store.state.loginMember.member.memberId;
+    const resultMemberId = wrapper.vm.$store.state.loginMember.member.memberId;
 
-    expect(expectedMemberName).to.equal(resultMemberName);
+    expect(expectedMemberId).to.equal(resultMemberId);
   })
 })
