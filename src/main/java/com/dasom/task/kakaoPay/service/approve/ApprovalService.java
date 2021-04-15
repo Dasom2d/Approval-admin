@@ -7,6 +7,7 @@ import com.dasom.task.kakaoPay.repository.approval.ApprovalRepository;
 import com.dasom.task.kakaoPay.validation.approval.ApprovalValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ import java.util.List;
 @Service
 public class ApprovalService {
 
-    private ApprovalRepository approvalRepository;
-    private ApprovalValidator approvalValidator;
+    private final ApprovalRepository approvalRepository;
+    private final ApprovalValidator approvalValidator;
 
     public ApprovalService(ApprovalRepository approvalRepository, ApprovalValidator approvalValidator) {
         this.approvalRepository = approvalRepository;
@@ -40,6 +41,7 @@ public class ApprovalService {
     /**
      * 기안 상신
      */
+    @Transactional
     public Integer registerApproval(Approval.Param param) {
         param.setApprovalStatusCode(ApprovalStatusCode.REQUEST);
         param.setRequestStatusCode(RequestStatusCode.WAIT);
@@ -53,6 +55,7 @@ public class ApprovalService {
     /**
      * 기안 수정
      */
+    @Transactional
     public Integer updateApproval(Approval.Param param) {
         approvalValidator.update(param);
 
@@ -65,6 +68,7 @@ public class ApprovalService {
     /**
      * 기안 승인, 반려
      */
+    @Transactional
     public Integer processApproval(Approval.Param param) {
         approvalValidator.process(param);
         param.setRequestStatusCode(RequestStatusCode.COMPLETE);
@@ -77,6 +81,7 @@ public class ApprovalService {
     /**
      * 기안 삭제
      */
+    @Transactional
     public Integer deleteApproval(Approval.Param param) {
         approvalValidator.delete(param);
 

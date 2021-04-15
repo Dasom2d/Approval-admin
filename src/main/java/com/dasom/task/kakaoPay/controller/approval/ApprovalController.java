@@ -6,15 +6,18 @@ import com.dasom.task.kakaoPay.model.approval.Approval;
 import com.dasom.task.kakaoPay.model.approval.ApprovalResponse;
 import com.dasom.task.kakaoPay.model.enumclass.code.ApprovalCode;
 import com.dasom.task.kakaoPay.service.approve.ApprovalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@Slf4j
+@RestController
 @RequestMapping("/api/approval")
 public class ApprovalController {
 
@@ -59,14 +62,20 @@ public class ApprovalController {
      */
 
     @PostMapping
-    @ResponseBody
-    public ResponseEntity registerApproval(@RequestBody Approval.Param param) throws Exception {
-        Integer approvalId = approvalService.registerApproval(param);
+    public ResponseEntity registerApproval(@RequestBody @Valid Approval.Param param, Errors errors) throws Exception {
+        try {
+            Integer approvalId = approvalService.registerApproval(param);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
-                        ApprovalCode.REGISTER_SUCCESS.getCode(),
-                        Boolean.TRUE, approvalId));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
+                            ApprovalCode.REGISTER_SUCCESS.getCode(),
+                            Boolean.TRUE, approvalId));
+
+        } catch (Exception e) {
+            log.error("register error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApprovalResponse.of("register error", -1));
+        }
     }
 
     /**
@@ -76,14 +85,20 @@ public class ApprovalController {
      */
 
     @PutMapping("/update")
-    @ResponseBody
-    public ResponseEntity updateApproval(@RequestBody Approval.Param param) throws Exception {
-        Integer approvalId = approvalService.updateApproval(param);
+    public ResponseEntity updateApproval(@RequestBody @Valid Approval.Param param, Errors errors) throws Exception {
+        try {
+            Integer approvalId =approvalService.updateApproval(param);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApprovalResponse.of(ApprovalCode.UPDATE_SUCCESS.getMessageCode(),
-                        ApprovalCode.UPDATE_SUCCESS.getCode(),
-                        Boolean.TRUE, approvalId));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
+                            ApprovalCode.REGISTER_SUCCESS.getCode(),
+                            Boolean.TRUE, approvalId));
+
+        } catch (Exception e) {
+            log.error("update error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApprovalResponse.of("update error", -1));
+        }
     }
 
     /**
@@ -93,14 +108,20 @@ public class ApprovalController {
      */
 
     @PutMapping("/process")
-    @ResponseBody
-    public ResponseEntity processApproval(@RequestBody Approval.Param param) throws Exception {
-        Integer approvalId = approvalService.processApproval(param);
+    public ResponseEntity processApproval(@RequestBody @Valid Approval.Param param, Errors errors) throws Exception {
+        try {
+            Integer approvalId = approvalService.processApproval(param);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApprovalResponse.of(ApprovalCode.PROCESS_SUCCESS.getMessageCode(),
-                        ApprovalCode.PROCESS_SUCCESS.getCode(),
-                        Boolean.TRUE, approvalId));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
+                            ApprovalCode.REGISTER_SUCCESS.getCode(),
+                            Boolean.TRUE, approvalId));
+
+        } catch (Exception e) {
+            log.error("process error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApprovalResponse.of("process error", -1));
+        }
     }
 
     /**
@@ -110,14 +131,21 @@ public class ApprovalController {
      */
 
     @DeleteMapping
-    @ResponseBody
-    public ResponseEntity deleteApproval(@RequestBody Approval.Param param) throws Exception {
-        approvalService.deleteApproval(param);
+    public ResponseEntity deleteApproval(@RequestBody @Valid Approval.Param param, Errors errors) throws Exception {
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApprovalResponse.of(ApprovalCode.DELETE_SUCCESS.getMessageCode(),
-                        ApprovalCode.DELETE_SUCCESS.getCode(),
-                        Boolean.TRUE));
+        try {
+            approvalService.deleteApproval(param);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApprovalResponse.of(ApprovalCode.REGISTER_SUCCESS.getMessageCode(),
+                            ApprovalCode.REGISTER_SUCCESS.getCode(),
+                            Boolean.TRUE));
+
+        } catch (Exception e) {
+            log.error("delete error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApprovalResponse.of("delete error", -1));
+        }
     }
 
     /**
@@ -126,7 +154,6 @@ public class ApprovalController {
      * @return ResponseEntity
      */
     @ExceptionHandler(ApprovalException.class)
-    @ResponseBody
     public ResponseEntity<ApprovalResponse<Boolean>> approvalServerException(ApprovalException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApprovalResponse.of(e.getMessage(), e.getCode(), Boolean.FALSE));
@@ -139,7 +166,6 @@ public class ApprovalController {
      */
 
     @ExceptionHandler(ApprovalBadRequestException.class)
-    @ResponseBody
     public ResponseEntity<ApprovalResponse<Boolean>> approvalBadRequestException(ApprovalBadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApprovalResponse.of(e.getMessage(), e.getCode(), Boolean.FALSE));

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public class ApprovalRepository {
 
-    private SqlSessionTemplate sqlSessionTemplate;
+    private final SqlSessionTemplate sqlSessionTemplate;
 
     public ApprovalRepository(SqlSessionTemplate sqlSessionTemplate) {
         this.sqlSessionTemplate = sqlSessionTemplate;

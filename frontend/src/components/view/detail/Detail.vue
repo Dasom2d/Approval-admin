@@ -255,7 +255,7 @@ export default {
         },
         registApproval() {
             try {
-                if (this.validate()) {
+               if (this.validate()) {
                     let registerParam = this.setParams();
                     axios.post('/api/approval', registerParam)
                         .then(response => {
